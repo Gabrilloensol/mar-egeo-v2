@@ -1,0 +1,202 @@
+{
+  "version": 5,
+  "source": "Public-domain SMK museum scans adapted in local Blender, five clearly labelled comparative reconstructions, and one attributed textured sculpture.",
+  "projectId": "0831cc82-329c-469b-a02d-d20fdce1a764",
+  "models": [
+    {
+      "id": "afrodita",
+      "bytes": 6582552,
+      "meshes": 1,
+      "triangles": 274272,
+      "sourceKind": "museum-scan",
+      "accession": "KAS434",
+      "source": "https://open.smk.dk/artwork/image/KAS434",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "sha256": "94e5925646e62c3f01e076822893266cf722f01d25d1b43346fd3481ac590207"
+    },
+    {
+      "id": "apolo",
+      "bytes": 6966424,
+      "meshes": 1,
+      "triangles": 290254,
+      "sourceKind": "museum-scan",
+      "accession": "KAS353",
+      "source": "https://open.smk.dk/artwork/image/KAS353",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "sha256": "32775178d33e5e801d3bc5bd47ce72ed851e0ea0b8b1c297111fc8bb11394af8"
+    },
+    {
+      "id": "ares",
+      "bytes": 9120516,
+      "meshes": 1,
+      "triangles": 380000,
+      "sourceKind": "museum-scan",
+      "accession": "KAS250",
+      "source": "https://open.smk.dk/artwork/image/KAS250",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "sha256": "a540bd6fe1aeec7df1721b65a5d963b9d2c1b4084aa3f9782ea2fa810a24fe54"
+    },
+    {
+      "id": "artemisa",
+      "bytes": 9119008,
+      "meshes": 1,
+      "triangles": 380000,
+      "sourceKind": "museum-scan",
+      "accession": "KAS2207",
+      "source": "https://open.smk.dk/artwork/image/KAS2207",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "sha256": "e715d4f33f179634ba680940371b988641660037502321b17ea462c8c28e0957",
+      "title": "Artemisa e Ifigenia"
+    },
+    {
+      "id": "atenea",
+      "bytes": 9118388,
+      "meshes": 1,
+      "triangles": 380000,
+      "sourceKind": "museum-scan",
+      "accession": "KAS255",
+      "source": "https://open.smk.dk/artwork/image/KAS255",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "sha256": "257154bd27a409ef35c740f0fc3bdb02d0bd51cfddb7fd99eec223c78804bdb6"
+    },
+    {
+      "id": "demeter",
+      "bytes": 9121244,
+      "meshes": 1,
+      "triangles": 380000,
+      "sourceKind": "museum-scan",
+      "accession": "KAS128",
+      "source": "https://open.smk.dk/artwork/image/KAS128",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "sha256": "03bc626e442815d509c88ac9cbb95437759827e653e179359399bcea6a0f7d85"
+    },
+    {
+      "id": "dioniso",
+      "bytes": 9121004,
+      "meshes": 1,
+      "triangles": 380000,
+      "sourceKind": "museum-scan",
+      "accession": "KAS196",
+      "source": "https://open.smk.dk/artwork/image/KAS196",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "sha256": "50425d6dec9f508b4282fd9010b8a360c4094f5fc38b258f0a1cbb883ef4e1f1"
+    },
+    {
+      "id": "hades",
+      "bytes": 9752044,
+      "meshes": 15,
+      "triangles": 404630,
+      "sourceKind": "digital-reconstruction",
+      "accession": "KAS629",
+      "source": "https://open.smk.dk/artwork/image/KAS629",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "sha256": "437059b9a4a0b43790517cd93b84634891c129eb259813f0fee592d167393162",
+      "sources": [
+        "https://open.smk.dk/artwork/image/KAS629"
+      ],
+      "title": "Reconstrucción comparativa de Hades",
+      "changes": "Standing Demosthenes cast used as a comparative draped base; bident, keys and crown modeled in Blender."
+    },
+    {
+      "id": "hefesto",
+      "bytes": 10860464,
+      "meshes": 19,
+      "triangles": 453311,
+      "sourceKind": "digital-reconstruction",
+      "accession": "KAS823",
+      "source": "https://open.smk.dk/artwork/image/KAS823",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "sha256": "5222440bcebe1add4cd500363a100d1bf516d1dd02f12087053619525c8b6795",
+      "sources": [
+        "https://open.smk.dk/artwork/image/KAS823"
+      ],
+      "title": "Reconstrucción comparativa de Hefesto",
+      "changes": "Hellenistic standing male cast used as a comparative anatomical base; workshop pilos, fitted apron, hammer, tongs and anvil modeled in Blender.",
+      "refinedAt": "2026-10-19",
+      "refinement": "Rounded pilos, curved waist apron and smaller supported workshop tools. Modern educational additions."
+    },
+    {
+      "id": "hera",
+      "bytes": 15377096,
+      "meshes": 1,
+      "triangles": 637026,
+      "sourceKind": "digital-reconstruction",
+      "source": "https://open.smk.dk/artwork/image/KAS622",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "sha256": "9cb516634d3d556a1bf1973cafe434182ddf9fe6b1f8ade03b52273f37df363f",
+      "sources": [
+        "https://open.smk.dk/artwork/image/KAS622",
+        "https://open.smk.dk/artwork/image/KAS838"
+      ],
+      "title": "Reconstrucción comparativa de Hera",
+      "changes": "Head KAS622 and draped body KAS838 combined; scepter and peacock modeled in Blender."
+    },
+    {
+      "id": "hermes",
+      "bytes": 9120968,
+      "meshes": 1,
+      "triangles": 379999,
+      "sourceKind": "museum-scan",
+      "accession": "KAS1161",
+      "source": "https://open.smk.dk/artwork/image/KAS1161",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "sha256": "e0fcac621f9e5c61fa11901389cee8bdcfb9c3999697b68e822e14ea9af98d6a"
+    },
+    {
+      "id": "hestia",
+      "bytes": 9784720,
+      "meshes": 14,
+      "triangles": 407125,
+      "sourceKind": "digital-reconstruction",
+      "accession": "KAS199",
+      "source": "https://open.smk.dk/artwork/image/KAS199",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "sha256": "eb6709b9e0f8748ace72d7933d5ca48231765132e8a4e009967f496382ba41fe",
+      "sources": [
+        "https://open.smk.dk/artwork/image/KAS199"
+      ],
+      "title": "Reconstrucción comparativa de Hestia",
+      "changes": "Standing draped woman KAS199 used as a comparative base; hearth tripod, sculpted flame and staff modeled in Blender."
+    },
+    {
+      "id": "persefone",
+      "bytes": 7718672,
+      "meshes": 84,
+      "triangles": 317472,
+      "sourceKind": "digital-reconstruction",
+      "accession": "KAS1800",
+      "source": "https://open.smk.dk/artwork/image/KAS1800",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "sha256": "78fe10efae9b94912ddc50666b5701ed2cee87c17703e4e935a8351f4b50574d",
+      "sources": [
+        "https://open.smk.dk/artwork/image/KAS1800"
+      ],
+      "title": "Reconstrucción comparativa de Perséfone",
+      "changes": "Archaic Kore cast used as a comparative draped base; Eleusinian torch, pomegranate, floral diadem and narcissi modeled in Blender."
+    },
+    {
+      "id": "poseidon",
+      "bytes": 5028836,
+      "meshes": 1,
+      "triangles": 209494,
+      "sourceKind": "museum-scan",
+      "accession": "KAS2100",
+      "source": "https://open.smk.dk/artwork/image/KAS2100",
+      "license": "https://creativecommons.org/publicdomain/mark/1.0/",
+      "sha256": "c3c44acbc1e8dff294ff9246f9ecf354a96d3451b282ae84cd269d616e7e5ea3"
+    },
+    {
+      "id": "zeus",
+      "bytes": 9953080,
+      "meshes": 1,
+      "triangles": 308436,
+      "sourceKind": "textured-sculpture",
+      "source": "https://sketchfab.com/3d-models/782f99eadca041b8b52d9e0a2c6f4e3f",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "sha256": "fe0c2d32f0018fcbfee3a8bb3a039657a2438b668e7607d26c0943a8a71a39a4",
+      "author": "LZ Creation",
+      "title": "Zeus con águila y cetro",
+      "changes": "Orientation, scale and smooth normals; original textures retained"
+    }
+  ]
+}

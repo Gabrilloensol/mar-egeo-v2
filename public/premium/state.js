@@ -1,0 +1,9 @@
+import {normalizeMastery,godIds} from './study.js';
+export const KEY='odisea.sanctuary.v1';
+export function normalize(raw={}){
+  const ids=['templo','altar','olivo','puerto'];
+  return {observationDetails:Object.fromEntries(Object.entries(raw?.observationDetails&&typeof raw.observationDetails==='object'?raw.observationDetails:{}).filter(([id])=>godIds.has(id)).map(([id,v])=>[id,[...new Set(Array.isArray(v)?v:[])].filter(i=>Number.isInteger(i)&&i>=0&&i<3)])),version:1,visited:[...new Set(Array.isArray(raw?.visited)?raw.visited:[])].filter(x=>ids.includes(x)),learned:[...new Set(Array.isArray(raw?.learned)?raw.learned:[])].filter(x=>godIds.has(x)),observed:[...new Set(Array.isArray(raw?.observed)?raw.observed:[])].filter(x=>godIds.has(x)),answers:raw?.answers&&typeof raw.answers==='object'&&!Array.isArray(raw.answers)?Object.fromEntries(Object.entries(raw.answers).filter(([k,v])=>ids.includes(k)&&Number.isInteger(v)&&v>=0&&v<3)): {},reduced:raw?.reduced===true,quality:raw?.quality==='low'?'low':'high',light:['dawn','day','dusk'].includes(raw?.light)?raw.light:'dawn',textSize:[100,115,130].includes(raw?.textSize)?raw.textSize:100,mastery:normalizeMastery(raw?.mastery),notes:Object.fromEntries(ids.filter(id=>typeof raw?.notes?.[id]==='string').map(id=>[id,raw.notes[id].slice(0,1200)]))};
+}
+export function load(storage){try{return normalize(JSON.parse(storage.getItem(KEY)||'{}'));}catch{return normalize();}}
+export function save(storage,state){try{storage.setItem(KEY,JSON.stringify(normalize(state)));return true;}catch{return false;}}
+export function answer(state,id,choice,correct){if(!['templo','altar','olivo','puerto'].includes(id)||!Number.isInteger(choice)||choice<0||choice>2)return state;return {...state,answers:{...state.answers,[id]:choice},visited:choice===correct?[...new Set([...state.visited,id])]:state.visited};}

@@ -1,0 +1,9 @@
+{
+  "name": "mar-egeo-v2",
+  "version": "2.0.0-premium9",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node tools/check-web.mjs"
+  }
+}
