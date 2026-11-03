@@ -1,13 +1,15 @@
+import {freshCourse,normalizeCourse} from './curriculum.js';
 // A new, versioned journey. Legacy saves are read, never overwritten or graded.
 export const JOURNEY_KEY='odisea.journey.v2';
 export const chapterIds=['sea','city','clues'];
 export const legacyKeys=['odisea-transform-v06-record','odisea-transform-v07-polis-record','odisea-transform-v08-sources-record'];
 const object=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{};
 const list=(v,allowed)=>[...new Set(Array.isArray(v)?v:[])].filter(x=>allowed.includes(x));
-export function fresh(){return {version:2,view:'map',chapter:'sea',step:0,completed:[],sea:{route:null,supplies:[],response:null,reason:null},city:{placed:[],roads:[],reason:null,expanded:false},clues:{found:[],answer:null,limit:null},records:{},replays:{},extensions:{source:null,similarity:null,difference:null},notes:{},prefs:{reduced:false,contrast:false,audio:false,large:false},legacy:[],updatedAt:null};}
+export function fresh(){return {version:2,curriculum:freshCourse(),view:'map',chapter:'sea',step:0,completed:[],sea:{route:null,supplies:[],response:null,reason:null},city:{placed:[],roads:[],reason:null,expanded:false},clues:{found:[],answer:null,limit:null},records:{},replays:{},extensions:{source:null,similarity:null,difference:null},notes:{},prefs:{reduced:false,contrast:false,audio:false,large:false},legacy:[],updatedAt:null};}
 export function normalizeJourney(raw){
  const r=object(raw),s=object(r.sea),c=object(r.city),e=object(r.clues),p=object(r.prefs),n=fresh();
- n.chapter=chapterIds.includes(r.chapter)?r.chapter:'sea';n.view=['map','play','book','teacher','settings'].includes(r.view)?r.view:'map';
+ n.curriculum=normalizeCourse(r.curriculum);
+ n.chapter=chapterIds.includes(r.chapter)?r.chapter:'sea';n.view=['map','play','book','teacher','settings','course','practice'].includes(r.view)?r.view:'map';
  n.step=Number.isInteger(r.step)?Math.max(0,Math.min(r.step,4)):0;
  n.completed=list(r.completed,chapterIds);n.legacy=list(r.legacy,chapterIds);
  n.replays=Object.fromEntries(n.completed.filter(id=>Number.isInteger(r.replays?.[id])).map(id=>[id,Math.max(0,Math.min(3,r.replays[id]))]));

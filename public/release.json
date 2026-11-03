@@ -1,1 +1,6 @@
-{"version":"2.0.0-premium9","edition":"web","publishedSourceDate":"2026-11-03","revision":"reading-1"}
+{
+  "version": "2.1.0-curriculum",
+  "edition": "web",
+  "publishedSourceDate": "2026-11-03",
+  "revision": "curriculum-1"
+}
