@@ -27,7 +27,7 @@ Los guardados antiguos reciben una estructura curricular vacía, sin atribuirles
 - Exclusión política ateniense: https://camws.org/sites/default/files/2855ExpressiveEffectsCivicEducation.pdf
 - Cartografía de dominio público: https://www.naturalearthdata.com/about/terms-of-use/
 
-Mapas generados de Natural Earth 1:110m. La escala simplifica islas pequeñas. Los límites actuales se rotulan como referencia y no como fronteras antiguas. Las demás escenas reutilizadas se identifican como ilustraciones didácticas.
+Mapamundi generado de Natural Earth 1:110m y mapa regional de Grecia de 1:50m, para conservar las principales islas del Egeo. La escala simplifica islas pequeñas. Los límites actuales se rotulan como referencia y no como fronteras antiguas. Las demás escenas reutilizadas se identifican como ilustraciones didácticas.
 
 ## Verificación
 
@@ -40,3 +40,15 @@ Mapas generados de Natural Earth 1:110m. La escala simplifica islas pequeñas. L
 ## Pendiente de validación externa
 
 Revisión de un docente de 3.º y pilotaje infantil para observar comprensión de instrucciones, autonomía y explicación. No se declara eficacia pedagógica demostrada ni certificación MINEDUC. La unidad no cubre todo el programa anual. No se produjeron nuevas esculturas en esta intervención.
+
+## Cierre de publicación, 4 de noviembre
+
+GitHub Pages confirmó correctamente la revisión curriculum-2. La revisión curriculum-3 incorpora el mapa regional detallado y conserva el ajuste de ancho de respuestas. No se alteran respuestas, progreso ni modelos 3D.
+
+## Cierre de publicación, 4 de noviembre
+
+GitHub Pages confirmó correctamente la revisión curriculum-2. La revisión curriculum-3 incorpora el mapa regional detallado y conserva el ajuste de ancho de respuestas. No se alteran respuestas, progreso ni modelos 3D.
+
+## Cierre de publicación, 4 de noviembre
+
+GitHub Pages confirmó correctamente la revisión curriculum-2. La revisión curriculum-3 incorpora el mapa regional detallado y conserva el ajuste de ancho de respuestas. No se alteran respuestas, progreso ni modelos 3D.
