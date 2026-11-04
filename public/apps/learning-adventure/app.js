@@ -152,7 +152,7 @@ function choose(id){message='';const [kind,value,answer]=id.split(':');if(kind==
 function action(id){if(['map','book','settings','teacher','practice'].includes(id)){navigate(id);return;}if(id.startsWith('chapter:')){start(id.split(':')[1]);return;}
  if(id.startsWith('discovery:')){state.chapter=id.split(':')[1];state.view='play';state.step=4;message='';persist();render();return;}
  if(id==='stop-voice'){stopVoice();return;}
- if(id==='resume'){start(resume());return;}if(id==='speak'){speak($('lesson-question')?.textContent||'Mira con calma y elige una opción.');return;}
+ if(id==='resume'){start(resume());return;}if(id==='speak'){speak([document.querySelector('.course-context')?.textContent,$('lesson-question')?.textContent].filter(Boolean).join(' ')||'Mira con calma y elige una opción.');return;}
  if(id==='next'){state.step=Math.min(4,state.step+1,maxStep(state));message='';}
  if(id==='back'){state.step=Math.max(0,state.step-1);message='';}
  if(id==='finish'){if(!readyToFinish(state))return;state=finish(state);message='Tu descubrimiento quedó en el cuaderno.';}
@@ -182,12 +182,13 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
  if(b.dataset.courseUnit!==undefined){const i=Number(b.dataset.courseUnit);if(!Number.isInteger(i)||!units[i]||!unitOpen(c,i))return;c.unit=i;c.step=units[i].tasks.findIndex(t=>c.answers[t.id]?.selected!==t.correct);if(c.step<0)c.step=0;state.view='course';courseRender();}
  if(b.dataset.courseAnswer!==undefined&&state.view==='course'){const t=units[c.unit].tasks[c.step];if(!t)return;state.curriculum=answerCourse(c,t.id,Number(b.dataset.courseAnswer));if(hinted.has(t.id))state.curriculum.answers[t.id].help=true;courseRender();}
  if(b.hasAttribute('data-course-next')){const t=units[c.unit].tasks[c.step];if(t&&c.answers[t.id]?.selected===t.correct){c.step++;courseRender();}}
+ if(b.hasAttribute('data-reflection-oral')){const r=c.reflections[c.unit]||{idea:'',evidence:'',oral:false};c.reflections[c.unit]={...r,oral:!r.oral};courseRender();}
  if(b.hasAttribute('data-course-back')){if(c.step>0)c.step--;else state.view='map';courseRender();}
  if(b.hasAttribute('data-course-shared')&&units.every((_,i)=>unitDone(c,i))){c.shared=true;courseRender();}
 });
 const hinted=new Set();
 document.addEventListener('toggle',e=>{if(e.target.dataset?.courseHint&&e.target.open){const id=e.target.dataset.courseHint;hinted.add(id);state.curriculum.hints=[...new Set([...state.curriculum.hints,id])];if(state.curriculum.answers[id])state.curriculum.answers[id].help=true;persist();}},true);
-document.addEventListener('input',e=>{if(e.target.id==='course-note'){state.curriculum.note=e.target.value.slice(0,600);persist();}});
+document.addEventListener('input',e=>{if(['idea','evidence'].includes(e.target.dataset.reflection)){const c=state.curriculum,r=c.reflections[c.unit]||{idea:'',evidence:'',oral:false};c.reflections[c.unit]={...r,[e.target.dataset.reflection]:e.target.value.slice(0,400)};persist();}if(e.target.id==='course-note'){state.curriculum.note=e.target.value.slice(0,600);persist();}});
 document.addEventListener('change',e=>{if(e.target.id==='course-topic'){state.curriculum.topic=e.target.value;courseRender();}if(e.target.id==='course-support'){state.curriculum.support=e.target.value;persist();}if(e.target.id==='player')hinted.clear();});
 
 if(!Object.keys(state.curriculum.answers).length&&state.view==='play')state.view='map';
