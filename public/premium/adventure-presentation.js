@@ -7,7 +7,7 @@ export function createPresentation(doc){
   const current=new Set(targets.map(el=>el.dataset.motionKey));
   if(!reduced){
    if(screen!==lastScreen){doc.querySelector('.scene')?.classList.add('scene-intro');doc.querySelector('.complete-seal')?.classList.add('reward-entry');}
-   else for(const el of targets)if(!last.has(el.dataset.motionKey))el.classList.add('decision-reveal');
+   else for(const el of targets)if(!last.has(el.dataset.motionKey)){el.classList.add('decision-reveal');if(el.hasAttribute('data-course-answer')){doc.querySelector('.course-feedback')?.classList.add('feedback-arrive');if(el.dataset.answerState==='correct')doc.querySelector('[data-course-next]')?.classList.add('next-ready');}} 
   }
   last=current;lastScreen=screen;
  };
