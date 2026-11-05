@@ -29,6 +29,13 @@ const evidenceImages={
 let imageOpener=null;
 function zoomEvidence(id){const item=evidenceImages[id];if(!item)return;imageOpener=document.activeElement;$('image-detail-title').textContent=item.title;$('image-detail-picture').src=asset('premium/assets/places/'+item.file);$('image-detail-picture').alt=item.alt;$('image-detail').showModal();$('image-detail-close').focus();}
 $('image-detail-close').onclick=()=>$('image-detail').close();$('image-detail').addEventListener('close',()=>imageOpener?.focus({preventScroll:true}));
+
+document.body.insertAdjacentHTML('beforeend','<dialog id="course-map-detail" aria-labelledby="course-map-title"><header><h2 id="course-map-title">Mapa ampliado</h2><button id="course-map-close">Cerrar mapa</button></header><p id="course-map-help">Desliza el mapa o usa las flechas del teclado para recorrerlo.</p><div class="map-scroll" tabindex="0" role="region" aria-label="Mapa ampliado desplazable" aria-describedby="course-map-help"><img id="course-map-image" alt=""></div><p>Natural Earth · límites actuales de referencia, no fronteras de la antigua Grecia.</p></dialog>');
+let mapOpener=null;
+$('course-map-close').onclick=()=>$('course-map-detail').close();
+$('course-map-detail').addEventListener('close',()=>mapOpener?.isConnected&&mapOpener.focus({preventScroll:true}));
+document.addEventListener('click',e=>{const b=e.target.closest('[data-course-map]');if(!b||!['world','greece'].includes(b.dataset.courseMap))return;stopVoice();mapOpener=b;const world=b.dataset.courseMap==='world';$('course-map-title').textContent=world?'Chile y Grecia en el mundo':'Grecia y el mar Egeo';$('course-map-image').src=asset('premium/assets/curriculum/'+b.dataset.courseMap+'.svg');$('course-map-image').alt=world?'Chile en América del Sur y Grecia en Europa':'Grecia, Atenas, el mar Egeo y el Mediterráneo';$('course-map-detail').showModal();$('course-map-close').focus();});
+
 const portraits=asset('assets/reconstruction/egeo-aa/premium/clio-premium.webp');
 const button=(label,action,disabled=false,cls='primary')=>`<button class="${cls}" data-action="${action}" ${disabled?'disabled':''}>${label}</button>`;
 const choice=(id,title,copy,symbol,selected=false)=>`<button class="choice${selected?' selected':''}" data-choice="${id}" data-motion-key="choice:${id}" aria-pressed="${selected}">${icon(symbol)}<span><strong>${title}</strong>${copy?`<small>${copy}</small>`:''}</span></button>`;

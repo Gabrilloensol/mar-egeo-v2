@@ -61,3 +61,17 @@ body.reduced #main .curriculum-route button,body.reduced #main .course-task .cho
 @media(prefers-reduced-motion:reduce){#main .curriculum-route li,#main .course-visual,#main .course-task,#main .course-seal,#main .course-feedback{animation:none!important}#main .curriculum-route button,#main .course-task .choice{transition:none;transform:none!important}}
 @media(max-width:760px){#main .course-hero{grid-template-columns:1fr}#main .course-hero-art{min-height:190px;order:-1}#main .course-hero-copy{padding:24px}#main .curriculum-route{grid-template-columns:1fr}#main .curriculum-route button{min-height:114px;padding:18px}#main .course-task{padding:18px}#main .course-heading{margin-bottom:20px}#main .course-hero h1{font-size:2.2rem}}
 @media print{#main .course-hero-art{display:none}#main .course-task,#main .course-hero,#main .curriculum-route button{background:white;color:black;box-shadow:none}#main .course-feedback,#main .curriculum-route li{animation:none}}
+
+/* Mobile review, 5 November: complete navigation and inspectable geography. */
+.topbar nav{min-width:0}
+#main .map-expand{display:flex;margin-top:12px;min-height:44px;width:100%;border-color:#b5a674;color:#f1d69e}
+#course-map-detail{box-sizing:border-box;width:min(1100px,96vw);max-width:96vw;max-height:94dvh;padding:20px;border:1px solid #c7b57d;border-radius:20px;background:#102d35;color:#f5f1e6;box-shadow:0 24px 100px #0009}
+#course-map-detail::backdrop{background:#03151ddd}
+#course-map-detail header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+#course-map-detail h2{font-size:1.4rem;margin:0}
+#course-map-detail p{font-size:.85rem;color:#d2e0da}
+#course-map-detail .map-scroll{overflow:auto;max-height:65dvh;border:1px solid #70918d;border-radius:12px;overscroll-behavior:contain}
+#course-map-detail .map-scroll:focus-visible{outline:3px solid #f1d290;outline-offset:2px}
+#course-map-detail img{display:block;width:100%;min-width:850px;max-width:none;height:auto}
+@media(max-width:600px){.topbar nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;width:100%}.topbar nav button{min-width:0;gap:5px;padding:10px 4px;font-size:.82rem}.topbar nav .ui-icon{width:19px;height:19px}#main .course-hero-art{min-height:150px}#main .course-hero-copy{padding:22px}#main .course-hero h1{font-size:clamp(1.75rem,7.3vw,2.15rem)}#course-map-detail{padding:14px}#course-map-detail header{align-items:flex-start}#course-map-close{flex-shrink:0;font-size:.85rem;padding:10px}}
+@media print{#course-map-detail,.map-expand{display:none!important}}
