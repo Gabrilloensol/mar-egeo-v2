@@ -185,6 +185,8 @@ window.addEventListener('storage',e=>{if(e.key===preferenceKey(profile)){state.p
 // The new course is stored inside the existing backup, per player symbol.
 function courseRender(){message='';persist();render();}
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const c=state.curriculum;
+ if(b.dataset.courseRead){const target={options:'.course-task .choices',support:'#trade-support-text',words:'#trade-words'}[b.dataset.courseRead];if(target){const node=document.querySelector(target);const text=b.dataset.courseRead==='options'?[...node.querySelectorAll('.choice')].map((el,i)=>'Opción '+(i+1)+'. '+el.querySelector('span:last-child').textContent).join('. '):node?.textContent;speak(text||'');}return;}
+
  if(b.dataset.courseContinue!==undefined){const i=Number(b.dataset.courseContinue);if(!units[i]||!unitOpen(c,i))return;c.unit=i;const step=units[i].tasks.findIndex(t=>c.answers[t.id]?.selected!==t.correct);c.step=step<0?units[i].tasks.length:step;state.view='course';courseRender();}
  if(b.dataset.courseUnit!==undefined){const i=Number(b.dataset.courseUnit);if(!Number.isInteger(i)||!units[i]||!unitOpen(c,i))return;c.unit=i;c.step=units[i].tasks.findIndex(t=>c.answers[t.id]?.selected!==t.correct);if(c.step<0)c.step=0;state.view='course';courseRender();}
  if(b.dataset.courseAnswer!==undefined&&state.view==='course'){const t=units[c.unit].tasks[c.step];if(!t)return;state.curriculum=answerCourse(c,t.id,Number(b.dataset.courseAnswer));if(hinted.has(t.id))state.curriculum.answers[t.id].help=true;courseRender();}

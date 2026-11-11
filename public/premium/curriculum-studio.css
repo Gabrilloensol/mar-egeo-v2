@@ -59,3 +59,19 @@ body.reduced #main .course-page *,body.reduced #main .course-end *{animation:non
 #main .temple-photo details{padding:0 20px 18px;font-size:.85rem;line-height:1.6}
 #main .temple-photo summary{cursor:pointer;min-height:44px;display:flex;align-items:center;text-decoration:underline;text-underline-offset:4px}
 #main .temple-photo details a{color:inherit;text-decoration:underline}
+
+/* Optional, multimodal supports for the exchange activity. */
+#main .trade-support{margin:20px 0;padding:18px;border:1px solid #8ebcc8;border-radius:18px;background:#0b2833}
+#main .trade-support h3{margin:0 0 14px;font:700 1rem/1.5 system-ui}
+#main .trade-resources{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+#main .trade-resources article{padding:14px;border:1px solid #7598a1;border-radius:12px;text-align:center}
+#main .trade-resources svg{display:block;width:60px;height:60px;margin:0 auto 10px;color:#f1d395}
+#main .trade-resources strong,#main .trade-resources span{display:block;line-height:1.6}
+#main .trade-resources span{font-size:.9rem}
+#main .trade-words{margin:14px 0}
+#main .trade-words summary{cursor:pointer;min-height:44px;align-content:center;text-decoration:underline;text-underline-offset:4px}
+#main .trade-words dt{font-weight:700;margin-top:12px}#main .trade-words dd{margin:4px 0 10px;line-height:1.6}
+#main .access-instruction{font-size:.9rem;line-height:1.6}
+#main .course-task>[data-course-read]{margin-bottom:14px}
+body.contrast #main .trade-support,body.contrast #main .trade-resources article{background:#05191f;border-color:white}
+@media(max-width:380px){#main .trade-resources{grid-template-columns:1fr}}
