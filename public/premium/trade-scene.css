@@ -1,0 +1,35 @@
+/* Art direction: a painted harbor above a clear, tactile exchange model. */
+#main .trade-scene{align-self:start;border:1px solid #789da3;border-radius:24px;overflow:hidden;background:#102f3a;box-shadow:0 22px 55px #00101645}
+#main .trade-panorama{position:relative;margin:0;isolation:isolate;overflow:hidden;background:#133d48}
+#main .trade-panorama>img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover}
+#main .trade-panorama:after{content:"";position:absolute;inset:0;background:linear-gradient(#092531db,transparent 60%,#092531b8);z-index:0;pointer-events:none}
+#main .harbor-heading{position:absolute;top:24px;left:24px;right:24px;z-index:1;text-shadow:0 2px 12px #001a24}
+#main .harbor-heading>span{font:700 .68rem/1.6 system-ui;letter-spacing:.16em;color:#e6cb91}
+#main .harbor-heading h2{font-size:clamp(1.5rem,2.5vw,2.2rem);line-height:1.15;margin:8px 0;color:#fff9e9;max-width:19ch}
+#main .trade-panorama figcaption{position:absolute;z-index:1;bottom:14px;left:24px;color:#fff4df;font-size:.75rem}
+#main .harbor-model{padding:22px;background:radial-gradient(ellipse at 50% 40%,#24535c 0,transparent 65%),#0e303a}
+#main .harbor-summary{margin:0 0 20px;color:#fff2d4;font-size:1.1rem;line-height:1.5}
+#main .harbor-endpoints{display:flex;justify-content:space-between;gap:20px}
+#main .harbor-endpoints>div{width:45%;display:grid;gap:5px;justify-items:center;text-align:center}
+#main .harbor-endpoints .ui-icon{width:40px;height:40px;color:#edc98a;padding:9px;box-sizing:content-box;border:1px solid #b7a16d80;background:#172f35;border-radius:16px;box-shadow:0 8px 18px #001c2855}
+#main .harbor-endpoints strong{color:#fff2d4;font-size:.95rem}#main .harbor-endpoints span{font-size:.82rem;line-height:1.4;color:#c5e0e3}
+#main .harbor-channel{position:relative;height:125px;margin:12px 0;overflow:hidden;border-radius:16px;background:repeating-linear-gradient(176deg,transparent 0 23px,#a6d9df0d 24px 25px)}
+#main .harbor-routes{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#b5d5cf55;stroke-width:1.5;stroke-dasharray:5 7}
+#main .harbor-coast{position:absolute;top:10px;bottom:10px;width:9px;background:#b59d70;border-radius:8px;opacity:.7}#main .coast-left{left:9%}#main .coast-right{right:9%}
+#main .cargo{position:absolute;display:flex;align-items:center;gap:5px;padding:7px 10px;border-radius:20px;background:#e5c590;color:#16303a;box-shadow:0 5px 14px #001c2866;font-size:.78rem;left:12%;top:15px}
+#main .cargo .ui-icon{width:23px;height:23px}#main .grain-cargo{left:68%;top:75px;background:#bcdace}
+#main [data-trade-state=exchange] .oil-cargo{left:68%}#main [data-trade-state=exchange] .grain-cargo{left:12%}
+#main .harbor-outcome{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid #af9e6a70;border-radius:12px;background:#1b3338}#main .harbor-outcome p{margin:0;line-height:1.5;font-size:.9rem;color:#fff0d4}
+#main .harbor-dot{width:8px;height:8px;border:2px solid #e6c68b;border-radius:50%;flex:none}
+#main [data-trade-state=exchange] .harbor-outcome{border-color:#a6dbbb;background:#22473f}#main [data-trade-state=exchange] .harbor-dot{background:#b5e7c6;border-color:#b5e7c6}
+#main .harbor-foot{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:16px}#main .harbor-foot small{font-size:.72rem;color:#bed3d5}
+#main .extra-pot{position:absolute;left:12%;top:68px;color:#ebc98e;display:flex}#main .extra-pot .ui-icon{width:25px;height:30px}
+#main .trade-scene.play-result[data-trade-state=exchange] .oil-cargo{animation:oil-voyage 1.2s cubic-bezier(.4,0,.2,1) both}
+#main .trade-scene.play-result[data-trade-state=exchange] .grain-cargo{animation:grain-voyage 1.2s .2s cubic-bezier(.4,0,.2,1) both}
+#main .trade-scene.play-result .harbor-outcome{animation:harbor-settle .45s ease-out both}
+#main .trade-scene.play-result .extra-pot{animation:harbor-settle .5s ease-out both}
+@keyframes oil-voyage{from{left:12%}to{left:68%}}@keyframes grain-voyage{from{left:68%}to{left:12%}}@keyframes harbor-settle{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:none}}
+@media(max-width:760px){#main .harbor-heading{top:18px;left:18px}#main .harbor-model{padding:18px}#main .trade-panorama>img{aspect-ratio:4/3}#main .harbor-foot .button{width:100%}}
+body.contrast #main .harbor-model,body.contrast #main .harbor-outcome{background:#05191f;border-color:white}
+body.reduced #main .trade-scene *{animation:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){#main .trade-scene *{animation:none!important;transition:none!important}}
