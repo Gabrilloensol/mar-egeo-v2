@@ -75,3 +75,18 @@ body.reduced #main .course-page *,body.reduced #main .course-end *{animation:non
 #main .course-task>[data-course-read]{margin-bottom:14px}
 body.contrast #main .trade-support,body.contrast #main .trade-resources article{background:#05191f;border-color:white}
 @media(max-width:380px){#main .trade-resources{grid-template-columns:1fr}}
+
+/* Answer effects explain a decision; no flashing, shaking, or loops. */
+#main .response-story{display:flex;align-items:flex-start;gap:15px;padding:20px;border:1px solid #d8bd83;border-radius:18px;background:linear-gradient(120deg,#443c28,#172e32)}
+#main .response-story[data-result=correct]{border-color:#9cd5c4;background:linear-gradient(120deg,#214c45,#112f39)}
+#main .response-symbol{flex:0 0 48px;color:#f1d395}#main .response-story[data-result=correct] .response-symbol{color:#b6ecda}
+#main .response-symbol svg{width:48px;height:48px;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#main .response-symbol circle{opacity:.5}#main .response-story strong{display:block;color:#fff4db;font-size:1.05rem;line-height:1.5}#main .response-story p{margin:7px 0 0;line-height:1.65;color:#f3f2e9}
+#main .response-story.feedback-arrive .response-symbol path{stroke-dasharray:80;animation:answer-trace .7s ease-out both}
+#main .response-story.feedback-arrive .response-symbol circle{transform-origin:center;animation:answer-ring .5s ease-out both}
+#main .response-listen{margin-bottom:14px}
+@keyframes answer-trace{from{stroke-dashoffset:80}to{stroke-dashoffset:0}}
+@keyframes answer-ring{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:.5}}
+body.contrast #main .response-story{background:#05191f;border-color:white}
+body.reduced #main .response-story *{animation:none!important}
+@media(prefers-reduced-motion:reduce){#main .response-story *{animation:none!important}}
