@@ -49,3 +49,13 @@ body.contrast #main .course-heading:after{display:none}
 body.reduced #main .course-page *,body.reduced #main .course-end *{animation:none!important;transition:none!important}
 @media(prefers-reduced-motion:reduce){#main .course-page *,#main .course-end *{animation:none!important;transition:none!important}}
 @media print{#main .discovery-banner,#main .course-page .course-heading{background:white;color:black;box-shadow:none}#main .chapter-emblem,#main .seal-orbit{display:none}}
+
+/* Evidence shown beside the historical-time question. */
+#main .course-visual.temple-photo{display:block;padding:0;overflow:hidden;align-self:start}
+#main .temple-photo img{display:block;width:100%;height:auto;max-height:none;object-fit:contain;border-radius:0}
+#main .temple-photo figcaption{padding:18px 20px;text-align:left;line-height:1.6}
+#main .temple-photo figcaption strong,#main .temple-photo figcaption span{display:block}
+#main .temple-photo figcaption strong{color:var(--ink,#f5f1e5);font-size:1rem}
+#main .temple-photo details{padding:0 20px 18px;font-size:.85rem;line-height:1.6}
+#main .temple-photo summary{cursor:pointer;min-height:44px;display:flex;align-items:center;text-decoration:underline;text-underline-offset:4px}
+#main .temple-photo details a{color:inherit;text-decoration:underline}
