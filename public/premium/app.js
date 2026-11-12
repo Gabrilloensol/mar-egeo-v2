@@ -1,4 +1,4 @@
-import {createMenuMotion} from './menu-motion.js';
+import {createMenuMotion} from './menu-motion.js?v=atlas18';
 import {activeProfile,readPreferences,writePreferences,preferenceKey} from './shared-preferences.js';
 import {setupAdventureReturn} from './adventure-return.js';
 import {gods,sites,sources,learningGuides,sitePresentation} from './content.js?v=explore14';
@@ -28,7 +28,15 @@ try{if(!storage?.getItem('odisea.sanctuary.v1'))state.reduced=matchMedia('(prefe
 sharedPrefs=readPreferences(storage,preferenceProfile,{reduced:state.reduced,large:state.textSize>100});state.reduced=sharedPrefs.reduced;if(sharedPrefs.large&&state.textSize===100)state.textSize=130;else if(!sharedPrefs.large)state.textSize=100;document.body.classList.toggle('contrast',sharedPrefs.contrast);
 function persist(){const ok=save(storage,state);$('save-status').textContent=ok?'Los hallazgos están guardados en este navegador.':'No se pudo guardar. Puedes exportar el cuaderno para conservar tus hallazgos.';return ok;}
 function announce(t){$('live').textContent=t;}
-function showDialog(id){document.querySelectorAll('dialog[open]').forEach(other=>{if(other.id!==id)other.close();});const d=$(id);if(!d.open)d.showModal();world?.pause(true);}
+function showDialog(id) {
+  document.querySelectorAll('dialog[open]').forEach(other => { if (other.id !== id) other.close(); });
+  const dialog = $(id);
+  if (!dialog.open) {
+    dialog.showModal();
+    menuMotion.sequence([{element:dialog.querySelector('.dialog-top > div'),delay:55,duration:215,distance:5}]);
+  }
+  world?.pause(true);
+}
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
 document.querySelectorAll('dialog').forEach(d=>d.addEventListener('close',()=>{syncWorld();}));
 function syncWorld() {
@@ -73,9 +81,11 @@ $('explore-view').onclick = async () => {
   const request = ++viewRequest;
   if (exploreView === 'field' && !world) {
     button.disabled = true;
+    button.setAttribute('aria-busy','true');
     button.textContent = 'Cargando vista 3D…';
     const ready = await prepareWorld();
     button.disabled = false;
+    button.removeAttribute('aria-busy');
     if (!ready || request !== viewRequest || mode !== 'explorar') {
       syncWorld();
       return;
@@ -191,7 +201,14 @@ $('close-site').onclick = () => {
 };
 const plain=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 function renderGodList(){const q=plain($('god-search').value);const list=gods.filter(g=>(filter==='Todos'||g.group===filter)&&plain([g.name,g.domain,g.symbol,g.roman].join(' ')).includes(q));if(list.length&&!list.some(g=>g.id===selectedGod)){selectedGod=list[0].id;renderGod();}$('god-detail').hidden=!list.length;$('god-list').replaceChildren();$('god-count').textContent=`${list.length} ${list.length===1?"divinidad":"divinidades"} · ${state.learned.length} ${state.learned.length===1?"ficha leída":"fichas leídas"}`;
- list.forEach(g=>{const b=document.createElement('button');b.className='god-option';b.style.setProperty('--accent',g.color);b.setAttribute('aria-pressed',String(selectedGod===g.id));b.setAttribute('aria-label',g.name+' · '+g.domain);b.innerHTML=`<span class="glyph" aria-hidden="true">${icon(g.id)}</span><span><strong>${g.name}</strong><small>${g.domain}</small></span>${state.learned.includes(g.id)?'<span class="read" aria-label="Leída">✓</span>':''}`;b.onclick=()=>{selectedGod=g.id;renderGodList();renderGod();};$('god-list').append(b);});
+ list.forEach(g=>{const b=document.createElement('button');b.className='god-option';b.style.setProperty('--accent',g.color);b.setAttribute('aria-pressed',String(selectedGod===g.id));b.setAttribute('aria-label',g.name+' · '+g.domain);b.innerHTML=`<span class="glyph" aria-hidden="true">${icon(g.id)}</span><span><strong>${g.name}</strong><small>${g.domain}</small></span>${state.learned.includes(g.id)?'<span class="read" aria-label="Leída">✓</span>':''}`;b.onclick=()=>{
+  if (selectedGod === g.id) return;
+  selectedGod=g.id;
+  renderGodList();
+  renderGod();
+  $('god-list').querySelector('[aria-pressed="true"]')?.focus({preventScroll:true});
+  menuMotion.sequence([{element:$('god-detail').querySelector('.god-heading'),duration:220,distance:6}]);
+ };$('god-list').append(b);});
  if(!list.length){const p=document.createElement('p');p.className='empty';p.textContent='No hay coincidencias. Prueba con otro nombre, un símbolo o el filtro Todos.';$('god-list').append(p);}
 }
 function renderGod(){
@@ -270,6 +287,14 @@ setupAdventureReturn(document,location.search);
 if(entryQuery.has('explorar'))explore();
 if(entryQuery.has('cuaderno'))$('nav-journal').click();
 if(entryQuery.has('escultura')){const id=entryQuery.get('escultura');gallery.open(gods.some(g=>g.id===id)?id:'zeus');}
+if (mode === 'inicio' && !document.querySelector('dialog[open]')) {
+  menuMotion.sequence([
+    {element:$('menu-title'),duration:300,distance:12},
+    {element:document.querySelector('#intro .intro-copy'),delay:60,duration:255},
+    {element:document.querySelector('.menu-primary-actions'),delay:105,duration:250},
+    {element:document.querySelector('.menu-shortcuts'),delay:145,duration:230,distance:5},
+  ]);
+}
 
 // Receive accessibility changes from the adventure without changing sanctuary discoveries.
 window.addEventListener('storage',e=>{

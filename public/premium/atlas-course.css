@@ -1,0 +1,37 @@
+@font-face {
+  font-family: 'Egeo Display';
+  src: url('./assets/type/cormorant-garamond-600.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+:root { --atlas-course-display: 'Egeo Display', Georgia, serif; --atlas-course-stroke: #b6a48266; }
+body { background: #0b202b; }
+.topbar { background: #0d202b; border-bottom-color: var(--atlas-course-stroke); }
+#main :is(.course-hero h1,.course-heading h1,.course-end h1,.lesson-head h1) {
+  font-family: var(--atlas-course-display);
+  font-weight: 600;
+}
+#main .course-hero { border-radius: 5px; border-color: var(--atlas-course-stroke); background: #15313d; }
+#main .course-hero h1 { font-size: clamp(2.7rem, 5.2vw, 4.8rem); line-height: .98; }
+#main .course-hero-art:after { background: linear-gradient(0deg,#091923e0,transparent 36%); }
+#main .curriculum-route { grid-template-columns: 1fr; gap: 0; border-block: 1px solid var(--atlas-course-stroke); }
+#main .curriculum-route button,
+#main .curriculum-route button:disabled {
+  min-height: 84px;
+  padding: 14px clamp(14px, 3vw, 24px);
+  border-width: 0 0 1px;
+  border-color: var(--atlas-course-stroke);
+  border-radius: 0;
+  background: #112b37;
+  box-shadow: none;
+}
+#main .curriculum-route li:last-child button { border-bottom-width: 0; }
+#main .curriculum-route button:disabled { background: #102630; }
+#main .curriculum-route .route-number { width: 44px; height: 44px; box-shadow: none; border-radius: 5px; }
+#main .curriculum-route button:not(:disabled):hover { background: #1c3a47; transform: none; box-shadow: inset 3px 0 #e5c98c; }
+#main .course-page .course-heading { border-radius: 5px; border-color: var(--stage-edge); }
+#main .course-activity :is(.lesson-evidence,.course-task), #main .course-research .research-form { border-radius: 5px; }
+#main .course-task .choice, #main .course-activity .response-story { border-radius: 5px; }
+#main .course-page .course-task { background: #122e3a; }
+body.contrast #main .course-page .course-task { background: #061922; }

@@ -53,5 +53,14 @@ export function createMenuMotion(document, reduced) {
     });
   }
 
-  return {transition, response, stop};
+  function sequence(elements) {
+    elements.forEach(({element, delay = 0, duration = 250, distance = 9}) => {
+      animate(element, [
+        {opacity: .4, transform: `translateY(${distance}px)`},
+        {opacity: 1, transform: 'none'},
+      ], {delay, duration, fill: 'backwards', easing: 'cubic-bezier(.2,.82,.28,1)'});
+    });
+  }
+
+  return {transition, response, sequence, stop};
 }

@@ -1,0 +1,186 @@
+/* Sanctuary presentation. The course adopts the same materials in atlas-course.css. */
+.odyssey-menu {
+  --atlas-ink: #091923;
+  --atlas-night: #102632;
+  --atlas-paper: #e9dfca;
+  --atlas-dark: #192b31;
+  --atlas-brass: #e7ca8e;
+  --atlas-stroke: #b6a48268;
+  --atlas-arrive: cubic-bezier(.2,.82,.28,1);
+}
+
+.odyssey-menu[data-mode=inicio] > header { background: #0a1c26; }
+.odyssey-menu #intro:not([hidden]) {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  width: 100%;
+  max-width: none;
+  min-height: calc(100svh - 122px);
+  padding: clamp(44px, 7vh, 100px) clamp(24px, 7vw, 125px);
+  gap: 0;
+  background: var(--atlas-ink);
+}
+.atlas-hero-copy { position: relative; z-index: 2; width: min(565px, 49vw); }
+.odyssey-menu #intro h1 {
+  margin: 12px 0 20px;
+  font-size: clamp(4rem, 6.7vw, 7.2rem);
+  line-height: .84;
+  text-wrap: balance;
+  text-shadow: 0 3px 24px #06182466;
+}
+.odyssey-menu #intro h1 span { margin-top: .06em; }
+.odyssey-menu #intro .intro-copy { max-width: 36ch; color: #f4ead8; }
+.odyssey-menu #intro .menu-shortcuts { border-color: #ecd9af60; }
+.odyssey-menu #intro #start { background: #112b38; border-color: #dac49989; }
+.odyssey-menu #intro #start:hover { background: #28424e; }
+.odyssey-menu .menu-cover {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  max-width: none;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  box-shadow: none;
+}
+.odyssey-menu .menu-cover img { width: 100%; height: 100%; object-fit: cover; object-position: 62% 50%; }
+.odyssey-menu .menu-cover::before {
+  inset: 0;
+  border: 0;
+  background: linear-gradient(90deg, #071a25 3%, #091d28ed 27%, #0c2238ac 43%, #0c223818 68%, transparent 88%),
+    linear-gradient(0deg, #091923e0 0%, transparent 24%);
+}
+.odyssey-menu .menu-cover figcaption {
+  position: absolute;
+  right: var(--menu-gutter);
+  bottom: 22px;
+  z-index: 1;
+  padding: 7px 10px;
+  border-left: 1px solid var(--atlas-brass);
+  color: #fff1d7;
+  background: #0a1c27c4;
+}
+.odyssey-menu[data-mode=inicio] > footer { padding-block: 8px; }
+.odyssey-menu > footer #sound { min-height: 30px; }
+
+/* A rail of places, a large image, and a linen sheet for the question. */
+.odyssey-menu[data-explore-view=field] #exploration { --atlas-rail: clamp(154px, 13vw, 206px); }
+.odyssey-menu[data-explore-view=field] .exp-heading { border-bottom: 1px solid var(--atlas-stroke); padding-bottom: 14px; }
+.odyssey-menu #progress-bar { transition: width 300ms var(--atlas-arrive); }
+.odyssey-menu #explore-view[aria-busy=true] { cursor: progress; opacity: .85; }
+.odyssey-menu[data-explore-view=field] #stations { background: transparent; border-color: var(--atlas-stroke); }
+.odyssey-menu[data-explore-view=field] .station { border-color: var(--atlas-stroke); }
+.odyssey-menu[data-explore-view=field] .station[aria-pressed=true] { background: #203744; }
+.odyssey-menu[data-explore-view=field] .station-symbol .ui-icon { color: var(--atlas-brass); }
+.odyssey-menu[data-explore-view=field] .site-gallery { border-radius: 3px; background: #102631; }
+.odyssey-menu[data-explore-view=field] .site-visual figcaption { padding: 10px 16px 2px; }
+.odyssey-menu[data-explore-view=field] .site-visual-controls { padding-top: 0; margin-top: 4px; }
+.odyssey-menu[data-explore-view=field] .site-visual-controls button { font-size: .82rem; }
+.odyssey-menu[data-explore-view=field] .site-study {
+  --line: #53463058;
+  --gold: #55401f;
+  --muted: #4e5047;
+  background: var(--atlas-paper);
+  border: 1px solid #d2c1a0;
+  border-radius: 3px;
+  color: var(--atlas-dark);
+  box-shadow: 0 12px 32px #030e16a0;
+}
+.odyssey-menu[data-explore-view=field] #site-card .scene-cue { border-color: #896634; color: #2c3b3c; }
+.odyssey-menu[data-explore-view=field] #site-card .scene-cue .ui-icon { color: #73582e; }
+.odyssey-menu[data-explore-view=field] .site-source { background: #f4eddd; border-color: #a69376; }
+.odyssey-menu[data-explore-view=field] .site-source :is(span,strong,a) { color: #344444; }
+.odyssey-menu[data-explore-view=field] #site-card #answers button {
+  background: #f5ecda;
+  color: #202d2f;
+  border-color: #a69275;
+  border-radius: 3px;
+}
+.odyssey-menu[data-explore-view=field] #site-card #answers button:hover { background: #fff7e8; border-color: #604b2a; }
+.odyssey-menu[data-explore-view=field] #site-card #answers [data-result=correct] { background: #d4e3cf; border-color: #3d654a; }
+.odyssey-menu[data-explore-view=field] #site-card #answers [data-result=wrong] { background: #f0dcb7; border-color: #865e25; }
+.odyssey-menu[data-explore-view=field] #site-card #feedback:not(:empty) { background: #f6eedb; color: #293737; border-color: #927044; }
+.odyssey-menu[data-explore-view=field] #site-card #feedback[data-result=correct] { background: #e0e9d8; border-color: #4d7359; }
+.odyssey-menu[data-explore-view=field] #site-card .close { color: #3b4e50; border-color: #9c8a6b; }
+.odyssey-menu[data-explore-view=field] .site-study :is(button,summary,a):focus-visible { outline-color: #53381a; }
+.odyssey-menu.contrast[data-explore-view=field] .site-study { background: #fff6e6; border-color: #231b14; }
+@media (min-width: 1150px) {
+  .odyssey-menu[data-explore-view=field] #exploration:not([hidden]) {
+    display: grid;
+    grid-template-columns: var(--atlas-rail) minmax(0, 1fr);
+    column-gap: 24px;
+    align-items: start;
+  }
+  .odyssey-menu[data-explore-view=field] .exp-heading { grid-column: 1 / -1; }
+  .odyssey-menu[data-explore-view=field] #stations { grid-template-columns: 1fr; margin: 0; border-block: 0; border-left: 1px solid var(--atlas-stroke); }
+  .odyssey-menu[data-explore-view=field] #stations .station { min-height: 74px; border-right: 0; border-bottom: 1px solid var(--atlas-stroke); }
+  .odyssey-menu[data-explore-view=field] .station[aria-pressed=true] .station-indicator { inset: 0 auto 0 -1px; width: 3px; height: auto; }
+  .odyssey-menu[data-explore-view=field] #site-card:not([hidden]) { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+}
+
+/* Native dialogs retain their top layer for the exit on supporting browsers. */
+.odyssey-menu dialog {
+  --dialog-material: #122935;
+  border-color: var(--atlas-stroke);
+  border-radius: 5px;
+  background: var(--dialog-material);
+  box-shadow: 0 28px 90px #020c16bd;
+  opacity: 0;
+  transform: translateY(12px) scale(.988);
+  transition: opacity 180ms ease, transform 220ms var(--atlas-arrive), display 220ms allow-discrete, overlay 220ms allow-discrete;
+}
+.odyssey-menu dialog[open] { opacity: 1; transform: none; }
+@starting-style { .odyssey-menu dialog[open] { opacity: 0; transform: translateY(12px) scale(.988); } }
+.odyssey-menu dialog::backdrop { background: #050e19b8; backdrop-filter: none; }
+.odyssey-menu dialog .dialog-top {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  padding: 8px 0 15px;
+  border-bottom: 1px solid var(--atlas-stroke);
+  background: var(--dialog-material);
+}
+.odyssey-menu dialog .dialog-top h2 { font: 600 clamp(2rem, 4vw, 3.2rem)/.98 var(--menu-display); }
+.odyssey-menu #codex { --dialog-material: #172e38; }
+.odyssey-menu #journal { --dialog-material: #263039; }
+.odyssey-menu #sculptures { --dialog-material: #14232e; }
+.odyssey-menu #god-detail { border-radius: 0; background: #0d2431; }
+.odyssey-menu #codex .god-option[aria-pressed=true] { border-left: 3px solid var(--atlas-brass); background: #29414b; }
+.odyssey-menu .journal-summary > span { border-width: 0 0 1px; background: transparent; }
+.odyssey-menu #journal-records .record-card { border-color: var(--atlas-stroke); border-radius: 3px; }
+.odyssey-menu #sculpture-status { padding: 10px 14px; background: #0d1d29e8; border-left: 2px solid var(--atlas-brass); }
+.odyssey-menu.contrast dialog { --dialog-material: #071a22; border-color: #fff; }
+
+/* Distinct snapshot tracks keep the image, copy, and rail in the same sequence. */
+:root[data-menu-motion=section] .atlas-hero-copy { view-transition-name: atlas-copy; }
+:root[data-menu-motion=section] #exploration .exp-heading { view-transition-name: atlas-heading; }
+:root[data-menu-motion=section] #stations { view-transition-name: atlas-rail; }
+:root[data-menu-motion=section]::view-transition-new(atlas-copy),
+:root[data-menu-motion=section]::view-transition-new(atlas-heading) { animation: atlas-reveal 280ms 55ms var(--atlas-arrive, ease-out) both; }
+:root[data-menu-motion=section]::view-transition-new(atlas-rail) { animation: atlas-reveal 260ms 95ms ease-out both; }
+:root[data-menu-motion=section]::view-transition-old(atlas-copy),
+:root[data-menu-motion=section]::view-transition-old(atlas-heading),
+:root[data-menu-motion=section]::view-transition-old(atlas-rail) { animation: egeo-leave 145ms ease both; }
+:root[data-menu-motion=section]::view-transition-new(egeo-study) { animation: atlas-reveal 280ms 125ms ease-out both; }
+:root[data-menu-motion=station]::view-transition-new(egeo-study) { animation: atlas-reveal 245ms 55ms ease-out both; }
+:root[data-menu-motion=plate]::view-transition-new(egeo-study),
+:root[data-menu-motion=plate]::view-transition-old(egeo-study) { animation: none; }
+:root[data-menu-motion=plate] .site-study { view-transition-name: none; }
+@keyframes atlas-reveal { from { opacity: 0; clip-path: inset(0 0 9% 0); transform: translateY(7px); } to { opacity: 1; clip-path: inset(0); transform: none; } }
+
+@media (max-width: 850px) {
+  .odyssey-menu #intro:not([hidden]) { min-height: auto; padding: 0; }
+  .odyssey-menu .menu-cover { position: relative; grid-row: 1; aspect-ratio: 16/9; }
+  .odyssey-menu .menu-cover::before { background: linear-gradient(0deg,#091923c0, transparent 40%); }
+  .odyssey-menu .menu-cover figcaption { bottom: 8px; right: 12px; }
+  .atlas-hero-copy { width: auto; padding: 24px var(--menu-gutter) 28px; }
+  .odyssey-menu #intro h1 { font-size: clamp(3.3rem, 9vw, 5.9rem); text-wrap: initial; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .odyssey-menu dialog { transition: none; }
+  :root[data-menu-motion]::view-transition-old(*), :root[data-menu-motion]::view-transition-new(*) { animation: none; }
+}
+.odyssey-menu.reduced dialog { transition: none; }
