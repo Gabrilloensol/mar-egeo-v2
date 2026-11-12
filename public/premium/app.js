@@ -1,3 +1,4 @@
+import {createMenuMotion} from './menu-motion.js';
 import {activeProfile,readPreferences,writePreferences,preferenceKey} from './shared-preferences.js';
 import {setupAdventureReturn} from './adventure-return.js';
 import {gods,sites,sources,learningGuides,sitePresentation} from './content.js?v=explore14';
@@ -11,7 +12,16 @@ decorateUiIcons();
 let storage;try{storage=localStorage;}catch{storage=null;}
 let state=load(storage),world=null,selectedSite=null,siteVisualIndex=0,selectedGod='poseidon',filter='Todos',mode='inicio';
 const preferenceProfile=activeProfile(storage);let sharedPrefs;
-let exploreView='field';
+let exploreView = 'field';
+const illustrated = new URLSearchParams(location.search).get('vista') === 'ilustrada';
+const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+const menuMotion = createMenuMotion(document, () => state.reduced || motionPreference.matches);
+let worldRequest;
+let viewRequest = 0;
+motionPreference.addEventListener?.('change', () => {
+  if (motionPreference.matches) menuMotion.stop();
+  world?.setReduced(state.reduced || motionPreference.matches);
+});
 let celebrationDismissed=state.visited.length===4;
 state.learned=state.learned.filter(id=>gods.some(g=>g.id===id));
 try{if(!storage?.getItem('odisea.sanctuary.v1'))state.reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;}catch{state.reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;}
@@ -22,14 +32,17 @@ function showDialog(id){document.querySelectorAll('dialog[open]').forEach(other=
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
 document.querySelectorAll('dialog').forEach(d=>d.addEventListener('close',()=>{syncWorld();}));
 function syncWorld() {
-  const inField = mode === 'explorar' && exploreView === 'field';
-  world?.pause(inField || Boolean(document.querySelector('dialog[open]')));
+  const show3d = mode === 'explorar' && exploreView === '3d';
+  world?.pause(!show3d || Boolean(document.querySelector('dialog[open]')));
   $('markers').hidden = mode !== 'explorar' || exploreView !== '3d' || document.body.dataset.render !== 'ready';
-  $('explore-view').hidden = document.body.dataset.render !== 'ready';
+  $('explore-view').hidden = illustrated || document.body.dataset.render === 'fallback';
   $('explore-view').textContent = exploreView === '3d' ? 'Volver a las ilustraciones' : 'Vista 3D';
   $('explore-view').setAttribute('aria-pressed', String(exploreView === '3d'));
+  updateProgress();
 }
 function explore() {
+  viewRequest++;
+  $('nav-explore').setAttribute('aria-current','page');
   mode = 'explorar';
   exploreView = 'field';
   document.body.dataset.mode = mode;
@@ -42,6 +55,8 @@ function explore() {
   window.scrollTo(0,0);
 }
 function home() {
+  viewRequest++;
+  $('nav-explore').removeAttribute('aria-current');
   mode = 'inicio';
   document.body.dataset.mode = mode;
   $('intro').hidden = false;
@@ -51,9 +66,21 @@ function home() {
   announce('');
   world?.home();
   window.scrollTo(0,0);
-  $('start').focus({preventScroll:true});
+  $('journey-start').focus({preventScroll:true});
 }
-$('explore-view').onclick = () => {
+$('explore-view').onclick = async () => {
+  const button = $('explore-view');
+  const request = ++viewRequest;
+  if (exploreView === 'field' && !world) {
+    button.disabled = true;
+    button.textContent = 'Cargando vista 3D…';
+    const ready = await prepareWorld();
+    button.disabled = false;
+    if (!ready || request !== viewRequest || mode !== 'explorar') {
+      syncWorld();
+      return;
+    }
+  }
   exploreView = exploreView === 'field' ? '3d' : 'field';
   document.body.dataset.exploreView = exploreView;
   if (exploreView === '3d') {
@@ -63,8 +90,14 @@ $('explore-view').onclick = () => {
   syncWorld();
   window.scrollTo(0,0);
 };
-for(const id of ['start','nav-explore'])$(id).onclick=explore;
-$('home').onclick=home;
+for (const id of ['start','nav-explore']) $(id).onclick = () => {
+  if (mode === 'inicio') menuMotion.transition('section', explore, '#exploration');
+  else explore();
+};
+$('home').onclick = () => {
+  if (mode === 'explorar' && exploreView === 'field') menuMotion.transition('section', home, '#intro');
+  else home();
+};
 $('dismiss-complete').onclick=()=>{celebrationDismissed=true;updateProgress();$('stations').querySelector('button')?.focus();};
 for(const id of ['nav-codex','intro-codex','complete-codex'])$(id).onclick=()=>openCodex();
 $('nav-campaign').onclick=()=>{location.href='apps/aa-campaign-map/';};
@@ -73,12 +106,15 @@ $('reset-camera').onclick=()=>{closeSite();world?.overview();};
 $('zoom-in').onclick=()=>world?.zoom(1.2);$('zoom-out').onclick=()=>world?.zoom(1/1.2);
 const stationIcon={templo:'temple',altar:'flame',olivo:'olive',puerto:'sail'};
 sites.forEach((s,i)=>{
- const b=document.createElement('button');b.className='station';b.dataset.site=s.id;b.style.setProperty('--station-art', `url("${s.image}")`);b.innerHTML=`<span class="station-symbol" aria-hidden="true">${uiIcon(stationIcon[s.id]||'compass')}</span><span class="station-name">${s.name}</span><span class="station-status" aria-hidden="true">${i+1}</span>`;b.setAttribute('aria-label',`Explorar ${s.name}`);b.onclick=()=>openSite(s.id);$('stations').append(b);
+ const b=document.createElement('button');b.className='station';b.dataset.site=s.id;b.innerHTML=`<span class="station-symbol" aria-hidden="true">${uiIcon(stationIcon[s.id]||'compass')}</span><span class="station-name">${s.name}</span><span class="station-status" aria-hidden="true">${i+1}</span><span class="station-indicator" aria-hidden="true"></span>`;b.setAttribute('aria-label',`Explorar ${s.name}`);b.onclick=()=>{
+  if (exploreView === 'field' && selectedSite !== s.id) menuMotion.transition('station', () => openSite(s.id), '#site-card');
+  else openSite(s.id);
+ };$('stations').append(b);
  const marker=document.createElement('button');marker.className='marker';marker.textContent=i+1;marker.setAttribute('aria-label','Explorar '+s.name);marker.dataset.marker=s.id;marker.onclick=()=>openSite(s.id);$('markers').append(marker);
 });
 function updateProgress(){
  $('progress').textContent=`${state.visited.length} de 4 lugares explorados`;$('progress-bar').style.width=state.visited.length*25+'%';
- document.querySelectorAll('[data-site]').forEach(b=>{const done=state.visited.includes(b.dataset.site);b.setAttribute('aria-pressed',String(selectedSite===b.dataset.site));b.querySelector('.station-status').textContent=done?'✓':String(sites.findIndex(s=>s.id===b.dataset.site)+1);b.setAttribute('aria-label',`${b.querySelector('.station-name').textContent}. ${done?'Explorado':'Por explorar'}`);});
+ document.querySelectorAll('[data-site]').forEach(b=>{const done=state.visited.includes(b.dataset.site);b.setAttribute('aria-pressed',String(selectedSite===b.dataset.site));b.querySelector('.station-status').textContent=done?'✓':exploreView==='3d'?String(sites.findIndex(s=>s.id===b.dataset.site)+1):'';b.setAttribute('aria-label',`${b.querySelector('.station-name').textContent}. ${done?'Explorado':'Por explorar'}`);});
  document.querySelectorAll('[data-marker]').forEach(b=>b.classList.toggle('done',state.visited.includes(b.dataset.marker)));
  $('mission-complete').hidden=celebrationDismissed||state.visited.length!==4||selectedSite!==null||mode!=='explorar';
 }
@@ -90,7 +126,8 @@ function renderSiteVisual(announceChange=false){
  $('site-image-index').textContent=`${siteVisualIndex+1} de ${visuals.length}`;$('site-scene-cue').innerHTML=uiIcon('eye')+`<span>${s.observe}</span>`;
  if(announceChange)announce(`${visual.title}. Imagen ${siteVisualIndex+1} de ${visuals.length}.`);
 }
-function changeSiteVisual(step){if(!selectedSite)return;const total=siteVisuals(sites.find(s=>s.id===selectedSite)).length;siteVisualIndex=(siteVisualIndex+step+total)%total;renderSiteVisual(true);}
+function changeSiteVisual(step){if(!selectedSite)return;const total=siteVisuals(sites.find(s=>s.id===selectedSite)).length;const show = () => { siteVisualIndex=(siteVisualIndex+step+total)%total; renderSiteVisual(true); };
+ if (exploreView === 'field') menuMotion.transition('plate', show, '.site-image-frame'); else show();}
 $('site-image-prev').onclick=()=>changeSiteVisual(-1);$('site-image-next').onclick=()=>changeSiteVisual(1);
 function openSite(id, focus = true) {
   const site = sites.find(item => item.id === id);
@@ -113,7 +150,6 @@ function openSite(id, focus = true) {
 
   const feedback = $('feedback');
   const savedChoice = state.answerRevisions?.[id] === 2 ? state.answers[id] : undefined;
-  feedback.classList.remove('answer-arrive');
   feedback.textContent = site.responses[savedChoice] || (state.visited.includes(id) ? 'Ya guardaste un hallazgo en este lugar.' : '');
   feedback.dataset.result = savedChoice === undefined ? '' : savedChoice === site.correct ? 'correct' : 'wrong';
   const answers = $('answers');
@@ -133,8 +169,7 @@ function openSite(id, focus = true) {
       });
       feedback.dataset.result = correct ? 'correct' : 'wrong';
       feedback.textContent = site.responses[index];
-      feedback.classList.remove('answer-arrive');
-      requestAnimationFrame(() => { if (selectedSite === id) feedback.classList.add('answer-arrive'); });
+      menuMotion.response(feedback, correct);
       updateProgress();
     };
     answers.append(button);
@@ -142,7 +177,7 @@ function openSite(id, focus = true) {
   updateProgress();
   if (exploreView === '3d') world?.focus(sitePresentation[id]);
   card.scrollTop = 0;
-  if (focus) card.focus();
+  if (focus) card.focus({preventScroll:matchMedia('(min-width: 761px)').matches});
 }
 function closeSite() {
   selectedSite = null;
@@ -172,7 +207,7 @@ function syncFilters(){document.querySelectorAll('[data-filter]').forEach(b=>b.s
 function openCodex(id){if(id){selectedGod=id;filter='Todos';$('god-search').value='';syncFilters();}renderGodList();renderGod();showDialog('codex');}
 $('god-search').oninput=renderGodList;document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;syncFilters();renderGodList();});
 $('reduced').checked=state.reduced;$('low-quality').checked=state.quality==='low';document.body.classList.toggle('reduced',state.reduced);
-$('reduced').onchange=e=>{state.reduced=e.target.checked;document.body.classList.toggle('reduced',state.reduced);world?.setReduced(state.reduced);gallery.updatePreferences();sharedPrefs={...sharedPrefs,reduced:state.reduced};writePreferences(storage,preferenceProfile,sharedPrefs);persist();};
+$('reduced').onchange=e=>{state.reduced=e.target.checked;document.body.classList.toggle('reduced',state.reduced);world?.setReduced(state.reduced||motionPreference.matches);if(state.reduced)menuMotion.stop();gallery.updatePreferences();sharedPrefs={...sharedPrefs,reduced:state.reduced};writePreferences(storage,preferenceProfile,sharedPrefs);persist();};
 $('low-quality').onchange=e=>{state.quality=e.target.checked?'low':'high';world?.setQuality(state.quality);persist();};
 $('text-size').value=state.textSize;document.documentElement.style.fontSize=16*state.textSize/100+'px';
 $('text-size').onchange=e=>{state.textSize=Number(e.target.value);document.documentElement.style.fontSize=16*state.textSize/100+'px';sharedPrefs={...sharedPrefs,large:state.textSize>100};writePreferences(storage,preferenceProfile,sharedPrefs);persist();};
@@ -189,11 +224,40 @@ $('sound').onclick=async()=>{if(ambience.paused){try{await ambience.play();$('so
 document.addEventListener('visibilitychange',()=>{if(document.hidden)ambience.pause();else if($('sound').getAttribute('aria-pressed')==='true')ambience.play().catch(()=>{});});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.querySelector('dialog[open]')&&selectedSite){$('close-site').click();}});
 updateProgress();persist();
-// Import renderer independently: all learning functions survive graphics failures.
-const illustrated=new URLSearchParams(location.search).get('vista')==='ilustrada';
-if(illustrated){document.body.dataset.render='fallback';$('scene-status').textContent='Vista ilustrada · aprendizaje completo disponible';$('illustrated-link').href='./';$('illustrated-link').textContent='Volver a la experiencia 3D ↗';}
-else import('./world.js?v=premium3').then(async({Sanctuary})=>{world=new Sanctuary($('scene'),sites,()=>mode);world.setReduced(state.reduced);world.setQuality(state.quality);world.setLight(state.light);await world.load();document.body.dataset.render='ready';$('scene-status').textContent='SANTUARIO DE NAXOS · Reconstrucción didáctica';syncWorld();}).catch(e=>{console.error('Escena 3D:',e);document.body.dataset.render='fallback';$('markers').hidden=true;$('scene-status').textContent='Vista ilustrada · exploración y códice disponibles';world?.dispose();world=null;});
-
+// The illustrated menu is ready before downloading the 3D sanctuary.
+function prepareWorld() {
+  if (worldRequest) return worldRequest;
+  worldRequest = import('./world.js?v=premium3').then(async ({Sanctuary}) => {
+    const renderer = new Sanctuary($('scene'), sites, () => mode);
+    world = renderer;
+    renderer.pause(true);
+    renderer.setReduced(state.reduced || motionPreference.matches);
+    renderer.setQuality(state.quality);
+    renderer.setLight(state.light);
+    await renderer.load();
+    document.body.dataset.render = 'ready';
+    $('scene-status').textContent = 'Santuario de Naxos · Reconstrucción didáctica';
+    syncWorld();
+    return true;
+  }).catch(error => {
+    console.error('Escena 3D:', error);
+    document.body.dataset.render = 'fallback';
+    $('scene-status').textContent = 'Vista 3D no disponible en este navegador';
+    announce('La vista 3D no está disponible. Puedes seguir explorando las ilustraciones.');
+    world?.dispose();
+    world = null;
+    syncWorld();
+    $('nav-explore').focus({preventScroll:true});
+    return false;
+  });
+  return worldRequest;
+}
+if (illustrated) {
+  document.body.dataset.render = 'fallback';
+  $('illustrated-link').href = '?explorar';
+  $('illustrated-link').textContent = 'Habilitar acceso a la vista 3D ↗';
+}
+syncWorld();
 
 // Resume the new journey without modifying legacy progress.
 import {loadJourney,JOURNEY_KEY} from './adventure-state.js';

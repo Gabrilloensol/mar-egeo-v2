@@ -1,0 +1,207 @@
+/* Foundation shared by the home screen and the illustrated exploration. */
+@font-face {
+  font-family: 'Egeo Display';
+  src: url('./assets/type/cormorant-garamond-600.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+.odyssey-menu {
+  --menu-ink: #0b1c24;
+  --menu-panel: #132a34;
+  --menu-paper: #f5edda;
+  --menu-muted: #c1cecb;
+  --menu-brass: #e5c98c;
+  --menu-line: #94a49e55;
+  --menu-width: 1420px;
+  --menu-gutter: clamp(16px, 4vw, 58px);
+  --menu-display: 'Egeo Display', Georgia, serif;
+  --menu-settle: cubic-bezier(.22, 1, .36, 1);
+}
+.odyssey-menu[data-mode=inicio] { overflow-y: auto; background: var(--menu-ink); }
+.odyssey-menu[data-mode=inicio] #world { visibility: hidden; }
+.odyssey-menu > header {
+  gap: 16px;
+  padding: 14px var(--menu-gutter);
+  background: #0e2029;
+  border-color: var(--menu-line);
+}
+.odyssey-menu > header nav { gap: clamp(10px, 3vw, 36px); }
+.odyssey-menu > header nav button { min-height: 44px; padding: 5px 0; letter-spacing: .02em; }
+.odyssey-menu > header nav [aria-current=page] { color: var(--menu-brass); box-shadow: inset 0 -1px var(--menu-brass); }
+.odyssey-menu > header #settings { min-height: 44px; border-radius: 8px; }
+.odyssey-menu[data-mode=inicio] > footer {
+  position: relative;
+  padding: 14px var(--menu-gutter);
+  border-top: 1px solid var(--menu-line);
+  background: var(--menu-ink);
+}
+.odyssey-menu[data-mode=inicio] > footer #scene-status { display: none; }
+
+.odyssey-menu #intro:not([hidden]) {
+  width: min(var(--menu-width), 100%);
+  max-width: none;
+  min-height: min(630px, calc(100svh - 120px));
+  margin: auto;
+  padding: 34px var(--menu-gutter);
+  display: grid;
+  grid-template-columns: minmax(0, .84fr) minmax(0, 1.16fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 68px);
+}
+.menu-intro-copy { min-width: 0; }
+.menu-kicker { color: var(--menu-brass); font-weight: 700; font-size: .72rem; letter-spacing: .12em; line-height: 1.6; }
+.odyssey-menu #intro h1 {
+  margin: 8px 0 15px;
+  font: 600 clamp(3.15rem, 6vw, 6.25rem)/.87 var(--menu-display);
+  letter-spacing: -.035em;
+  color: var(--menu-paper);
+}
+.odyssey-menu #intro h1 span { display: block; color: var(--menu-brass); }
+.odyssey-menu #intro .intro-copy { max-width: 33ch; margin: 0 0 22px; color: var(--menu-muted); line-height: 1.6; font-size: 1rem; }
+.menu-primary-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; pointer-events: auto; }
+.odyssey-menu #journey-start, .odyssey-menu #intro #start {
+  min-height: 50px;
+  margin: 0;
+  border: 1px solid var(--menu-line);
+  border-radius: 9px;
+  padding: 10px 15px;
+  font-size: .9rem;
+  text-align: left;
+}
+.odyssey-menu #journey-start { background: #dec38b; color: #14282b; border-color: #f0d8a6; }
+.odyssey-menu #intro #start { display: inline-flex; gap: 8px; align-items: center; background: #172d38; color: var(--menu-paper); }
+.odyssey-menu #intro #start .ui-icon { color: var(--menu-brass); }
+.menu-shortcuts {
+  display: flex;
+  gap: 8px 16px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--menu-line);
+  margin-top: 23px;
+  padding-top: 11px;
+}
+.odyssey-menu #intro .menu-shortcuts button {
+  display: inline-flex;
+  min-height: 44px;
+  width: auto;
+  gap: 8px;
+  margin: 0;
+  padding: 4px 0;
+  align-items: center;
+  color: var(--menu-paper);
+  background: transparent;
+  border: 0;
+  font-size: .82rem;
+}
+.menu-cover {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  margin: 0;
+  padding: 8px;
+  border: 1px solid var(--menu-line);
+  background: #172e36;
+  box-shadow: 0 20px 45px #0005;
+}
+.menu-cover::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px solid #fff2;
+  z-index: 1;
+  pointer-events: none;
+}
+.menu-cover img { display: block; width: 100%; height: auto; aspect-ratio: 3/2; object-fit: cover; }
+.menu-cover figcaption { padding: 10px 5px 3px; color: var(--menu-muted); font-size: .75rem; }
+
+/* Exploration has a single station rail and an evidence plate. */
+.odyssey-menu[data-explore-view=field] #exploration { max-width: var(--menu-width); }
+.odyssey-menu[data-explore-view=field] #exploration .exp-heading h2,
+.odyssey-menu #site-title { font: 600 clamp(2.15rem, 4.2vw, 3.65rem)/1 var(--menu-display); }
+.odyssey-menu[data-explore-view=field] #stations {
+  gap: 0;
+  border-block: 1px solid var(--menu-line);
+  margin-bottom: 22px;
+  background: #10252e;
+}
+.odyssey-menu[data-explore-view=field] .station {
+  min-height: 62px;
+  padding: 12px clamp(8px, 1.5vw, 20px);
+  border: 0;
+  border-right: 1px solid var(--menu-line);
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+  color: var(--menu-paper);
+}
+.odyssey-menu[data-explore-view=field] .station::before { display: none; }
+.odyssey-menu[data-explore-view=field] .station[aria-pressed=true] { background: #1c3540; box-shadow: none; }
+.station-indicator { display: none; }
+.odyssey-menu[data-explore-view=field] .station[aria-pressed=true] .station-indicator {
+  display: block;
+  position: absolute;
+  inset: auto 10px -1px;
+  height: 2px;
+  background: var(--menu-brass);
+}
+.odyssey-menu .station-status:empty { display: none; }
+.odyssey-menu[data-explore-view=field] .site-gallery,
+.odyssey-menu[data-explore-view=field] .site-study {
+  background: var(--menu-panel);
+  border-color: var(--menu-line);
+  border-radius: 12px;
+  box-shadow: 0 12px 35px #020f184d;
+}
+.odyssey-menu[data-explore-view=field] #site-card #site-title { font: 600 clamp(2rem, 4vw, 3.15rem)/1 var(--menu-display); }
+.odyssey-menu #site-card #question { font: 600 clamp(1.4rem, 2.35vw, 1.85rem)/1.1 var(--menu-display); }
+.odyssey-menu #site-card .scene-cue { background: transparent; border-color: var(--menu-brass); }
+.odyssey-menu #site-card #answers button { border-radius: 8px; }
+.odyssey-menu #site-card #feedback[data-result=correct] { border-left: 4px solid #a8dac2; }
+.odyssey-menu #site-card #feedback[data-result=wrong] { border-left: 4px solid #e4bf83; }
+
+.odyssey-menu :is(.menu-primary-actions button, #journey-start, .menu-shortcuts button, .station, #answers button, .site-visual-controls button) {
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease, transform 140ms var(--menu-settle);
+}
+.odyssey-menu :is(.menu-primary-actions button, #journey-start, .station, #answers button):active { transform: translateY(1px); }
+@media (hover:hover) {
+  .odyssey-menu #journey-start:hover { background: #f1d9a4; }
+  .odyssey-menu #intro #start:hover, .odyssey-menu[data-explore-view=field] .station:hover { background: #24424e; }
+  .odyssey-menu #intro .menu-shortcuts button:hover { color: var(--menu-brass); }
+}
+
+/* Shared visual plate and selection line remain identifiable across snapshots. */
+:root[data-menu-motion] body > header { view-transition-name: egeo-header; }
+:root[data-menu-motion] .menu-cover { view-transition-name: egeo-plate; }
+:root[data-menu-motion] body[data-explore-view=field] .site-image-frame { view-transition-name: egeo-plate; }
+:root[data-menu-motion] .site-study { view-transition-name: egeo-study; }
+:root[data-menu-motion=station] .station[aria-pressed=true] .station-indicator { view-transition-name: egeo-selection; }
+:root[data-menu-motion]::view-transition-group(*) { animation-duration: 380ms; animation-timing-function: cubic-bezier(.22,1,.36,1); }
+:root[data-menu-motion]::view-transition-old(egeo-header) { animation: none; opacity: 0; }
+:root[data-menu-motion]::view-transition-new(egeo-header) { animation: none; }
+:root[data-menu-motion]::view-transition-old(egeo-study) { animation: egeo-leave 140ms ease both; }
+:root[data-menu-motion]::view-transition-new(egeo-study) { animation: egeo-enter 290ms 70ms cubic-bezier(.22,1,.36,1) both; }
+:root[data-menu-motion=station]::view-transition-group(*) { animation-duration: 280ms; }
+@keyframes egeo-leave { to { opacity: 0; transform: translateY(-4px); } }
+@keyframes egeo-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 850px) {
+  .odyssey-menu > header { flex-wrap: wrap; }
+  .odyssey-menu > header nav { order: 3; width: 100%; justify-content: space-between; gap: 8px; }
+  .odyssey-menu > header nav button { flex: 1; justify-content: center; text-align: center; }
+  .odyssey-menu #intro:not([hidden]) { min-height: auto; padding-block: 24px; grid-template-columns: 1fr; gap: 22px; }
+  .odyssey-menu #intro h1 { font-size: clamp(3.2rem, 9vw, 5.4rem); }
+  .menu-cover { max-width: 620px; }
+}
+@media (max-width: 540px) {
+  .odyssey-menu > header { padding-block: 10px; }
+  .odyssey-menu > header nav button { font-size: .74rem; }
+  .odyssey-menu #journey-start, .odyssey-menu #intro #start { width: 100%; justify-content: center; }
+  .odyssey-menu[data-explore-view=field] .station { min-height: 54px; }
+  .menu-shortcuts { margin-top: 15px; }
+}
+.odyssey-menu.contrast :is(.menu-cover, .site-gallery, .site-study, .station, .menu-primary-actions) { --menu-line: #fff; }
+.odyssey-menu.reduced * { transition-duration: 0s !important; }
+@media (prefers-reduced-motion: reduce) {
+  .odyssey-menu * { transition-duration: 0s !important; }
+  :root[data-menu-motion]::view-transition-group(*) { animation-duration: 0s !important; }
+}

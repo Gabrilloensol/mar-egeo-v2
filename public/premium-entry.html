@@ -1,10 +1,28 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a262d"><title>Odisea del Egeo · El santuario de los dioses</title><link rel="icon" href="assets/icons/odisea.ico"><link rel="stylesheet" href="premium/style.css?v=journey1"><link rel="stylesheet" href="premium/sculptures.css?v=refined6"><link rel="stylesheet" href="premium/exploration.css?v=2"><script type="module" src="premium/app.js?v=explore14"></script><link rel="stylesheet" href="premium/journey-entry.css?v=journey2"></head>
-<body data-mode="inicio">
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a262d"><title>Odisea del Egeo · El santuario de los dioses</title><link rel="icon" href="assets/icons/odisea.ico"><link rel="stylesheet" href="premium/style.css?v=journey1"><link rel="stylesheet" href="premium/sculptures.css?v=refined6"><link rel="stylesheet" href="premium/exploration.css?v=2"><script type="module" src="premium/app.js?v=menu16"></script><link rel="stylesheet" href="premium/journey-entry.css?v=journey2"><link rel="stylesheet" href="premium/odyssey-menu.css"></head>
+<body class="odyssey-menu" data-mode="inicio">
 <a href="#primary" class="skip">Saltar a la aventura</a>
 <div id="world" aria-label="Santuario insular tridimensional"><img id="fallback" src="premium/assets/sanctuary-premium.webp" alt="Reconstrucción artística de un santuario insular del Egeo con templo policromado, altar, olivar, prensa, muelle y nave mercante."><canvas id="scene" aria-label="Escena 3D. Usa las estaciones de exploración para recorrerla con teclado."></canvas><div class="vignette"></div><div id="markers" hidden></div></div>
 <header><button class="brand" id="home" aria-label="Volver al inicio"><span class="brand-seal">Ω</span><span>ODISEA<span class="brand-small">DEL EGEO</span></span></button><nav aria-label="Navegación principal"><button id="nav-explore" data-ui-icon="compass">Explorar</button><button id="nav-codex" data-ui-icon="gods">Los dioses</button><button id="nav-journal" data-ui-icon="book">Mi cuaderno</button><button id="nav-campaign" data-ui-icon="map">Campaña</button></nav><button id="settings" class="quiet" data-ui-icon="settings">Ajustes</button></header>
-<main id="primary"><a hidden data-adventure-return class="adventure-return" href="apps/learning-adventure/">← Volver a mi aventura</a><section id="intro"><p class="eyebrow"><span></span> NAXOS · LAS ISLAS CÍCLADAS</p><p class="school-level">GRECIA · 3.º BÁSICO · REFUERZO EN 4.º</p><h1>Tu aventura<br>en la<br><em>antigua Grecia.</em></h1><p class="intro-copy">Viaja entre islas, conecta una ciudad y descubre sus historias.</p><a id="journey-start" class="gold-button" href="apps/learning-adventure/">Empezar mi aventura <span>→</span></a><button id="start" class="text-button" data-ui-icon="compass">Explorar libremente <span>↗</span></button><button id="intro-gallery" class="gallery-entry" data-ui-icon="gallery">La galería escultórica <small>15 DIVINIDADES · 3D</small><span aria-hidden="true">↗</span></button><button id="intro-codex" class="text-button" data-ui-icon="gods">Conocer a los dioses <span>→</span></button><div class="learning-steps" aria-label="Así aprendemos"><span data-ui-icon="eye">Mira</span><span data-ui-icon="question">Pregunta</span><span data-ui-icon="check">Explica</span></div></section>
+<main id="primary"><a hidden data-adventure-return class="adventure-return" href="apps/learning-adventure/">← Volver a mi aventura</a><section id="intro" aria-labelledby="menu-title">
+    <div class="menu-intro-copy">
+      <p class="menu-kicker">HISTORIA · 3.º BÁSICO · REFUERZO EN 4.º</p>
+      <h1 id="menu-title">Rumbo a la <span>antigua Grecia</span></h1>
+      <p class="intro-copy">Cruza el Egeo y descubre cómo vivían las personas de la antigua Grecia.</p>
+      <div class="menu-primary-actions">
+        <a id="journey-start" class="gold-button" href="apps/learning-adventure/">Empezar mi aventura <span aria-hidden="true">→</span></a>
+        <button id="start" class="text-button" data-ui-icon="compass">Explorar la isla</button>
+      </div>
+      <div class="menu-shortcuts">
+        <button id="intro-gallery" class="gallery-entry" data-ui-icon="gallery">Esculturas 3D</button>
+        <button id="intro-codex" class="text-button" data-ui-icon="gods">Conocer a los dioses</button>
+      </div>
+    </div>
+    <figure class="menu-cover">
+      <img src="premium/assets/menu/aegean-sanctuary.jpg" width="1200" height="800" alt="Ilustración de un santuario sobre una isla rocosa del Egeo, iluminado por el sol de la tarde." fetchpriority="high">
+      <figcaption>Un santuario imaginado del mar Egeo</figcaption>
+    </figure>
+  </section>
 <section id="exploration" hidden aria-label="Exploración del santuario">
   <div class="exp-heading">
     <div><h2>Explora la isla</h2><p id="progress">0 de 4 lugares explorados</p><div class="progress-track"><span id="progress-bar"></span></div></div>
@@ -39,7 +57,7 @@
   </section>
   <section id="mission-complete" hidden><button id="dismiss-complete" class="close" aria-label="Seguir explorando">×</button><h2>Exploraste los cuatro lugares</h2><p>Vuelve a una estación o revisa tus hallazgos en el cuaderno.</p><button id="complete-journal" class="outline-button">Abrir mi cuaderno →</button><button id="complete-codex" class="gold-button">Conocer a los dioses →</button></section>
 </section></main>
-<footer><span id="scene-status" role="status">Preparando el santuario…</span><span class="edition">MAR EGEO V2 <i>✦</i> AVENTURA · 27 OCT 2026</span><button id="sound" aria-pressed="false">Sonido: apagado</button></footer>
+<footer><span id="scene-status" role="status">Preparando el santuario…</span><span class="edition">MAR EGEO V2</span><button id="sound" aria-pressed="false">Sonido: apagado</button></footer>
 <dialog id="codex" aria-labelledby="codex-title"><div class="dialog-top"><div><p class="eyebrow">ARCHIVO DE LA MEMORIA</p><h2 id="codex-title">Los dioses de Grecia</h2><p class="dialog-intro">Elige un dios. Mira su símbolo y descubre su historia.</p></div><button class="close" data-close aria-label="Cerrar códice">×</button></div><a hidden data-adventure-return class="adventure-return" href="apps/learning-adventure/">← Volver a mi aventura</a><button id="codex-gallery" class="gallery-banner"><span><strong>Ver esculturas 3D</strong><small>Gíralas y busca sus símbolos.</small></span><span aria-hidden="true">Entrar en la galería ↗</span></button><div class="codex-layout"><aside class="god-sidebar"><label class="search-label" for="god-search">Buscar un dios o símbolo</label><input id="god-search" type="search" placeholder="Nombre, símbolo o tema…"><div class="filters" role="group" aria-label="Filtrar divinidades"><button data-filter="Todos" aria-pressed="true">Todos</button><button data-filter="Olimpo" aria-pressed="false">Olimpo</button><button data-filter="Inframundo" aria-pressed="false">Inframundo</button><button data-filter="Hogar" aria-pressed="false">Hogar</button></div><p id="god-count"></p><div id="god-list"></div></aside><article id="god-detail" tabindex="0"></article></div><details class="codex-note"><summary>¿Por qué hay distintas listas de dioses?</summary><p>Los relatos griegos pueden tener distintas versiones. Algunas listas incluyen a Hestia y otras a Dioniso. Hades y Perséfone aparecen aquí por su importancia, pero no se cuentan entre los doce dioses del Olimpo.</p></details></dialog>
 <dialog id="sculptures" aria-labelledby="sculpture-title">
 <div class="dialog-top"><div><p class="eyebrow">MAR EGEO · COLECCIÓN ESCULTÓRICA</p><h2 id="sculpture-title">Dioses en 3D</h2><p class="dialog-intro">Colección compartida: sus hallazgos no cambian al elegir otro símbolo de aventura.</p></div><button class="close" data-close aria-label="Cerrar galería escultórica">×</button></div><a hidden data-adventure-return class="adventure-return" href="apps/learning-adventure/">← Volver a mi aventura</a>
