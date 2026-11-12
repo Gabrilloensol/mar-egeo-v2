@@ -5,6 +5,15 @@ body[data-mode=explorar][data-explore-view=field] {
 }
 body[data-mode=explorar][data-explore-view=field] #world { visibility: hidden; }
 body[data-mode=explorar][data-explore-view=field] > header { background: #0d252e; }
+body[data-mode=explorar][data-explore-view=field] > footer {
+  position: relative;
+  justify-content: flex-end;
+  padding-block: 12px;
+  border-top: 1px solid #66858c55;
+  background: #0d252e;
+}
+body[data-mode=explorar][data-explore-view=field] > footer .edition,
+body[data-mode=explorar][data-explore-view=field] #scene-status { display: none; }
 body[data-explore-view=field] #exploration {
   width: min(1420px, 100%);
   margin: auto;
@@ -46,7 +55,7 @@ body[data-explore-view=field] .station::before {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(90deg, #0c252ff5, #0c252f9c), var(--station-art) center 45% / cover;
+  background: linear-gradient(90deg, #0c252ff5 10%, #0c252fc4 65%, #0c252f70), var(--station-art) center 45% / cover;
 }
 body[data-explore-view=field] .station[aria-pressed=true] {
   border-color: #f0cb84;
@@ -122,7 +131,7 @@ body[data-explore-view=field] .site-gallery .visual-note { margin: 0 18px; paddi
 .site-source figcaption { font-size: .71rem; line-height: 1.45; overflow-wrap: anywhere; }
 .site-source figcaption span, .site-source figcaption strong { display: block; }
 .site-source figcaption span { color: #a9ddd1; font-weight: 700; }
-.site-source figcaption strong { color: #fff7e6; margin: 3px 0; }
+.site-source figcaption strong { color: #fff7e6; margin: 3px 0; font-size: .84rem; }
 .site-source a { color: #e7d7ad; text-decoration: underline; text-underline-offset: 2px; }
 #site-card #question { margin: 13px 0 11px; font-size: clamp(1.16rem, 2vw, 1.44rem); line-height: 1.3; }
 #site-card #answers button {
