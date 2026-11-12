@@ -20,7 +20,7 @@ El sitio sirve HTML estático, CSS y módulos ES nativos. Los estados de la aven
 | Elemento | Regla |
 | --- | --- |
 | Superficies | Fondo `#0b1c24`, panel `#132a34`, texto `#f5edda`, texto secundario `#c1cecb`, latón `#e5c98c`. El latón destaca acciones primarias y selección. |
-| Tipografía | Cormorant Garamond seminegrita para encabezados. Familia del sistema para preguntas breves de apoyo, controles y texto continuo. WOFF2 local con [licencia OFL](../public/premium/assets/type/OFL-Cormorant-Garamond.txt). |
+| Tipografía | Cormorant Garamond seminegrita para títulos y preguntas. Familia del sistema para controles y texto continuo. WOFF2 local con [licencia OFL](../public/premium/assets/type/OFL-Cormorant-Garamond.txt). |
 | Navegación | Marca de inicio, controles HTML y biblioteca propia de iconos con rótulos. La estación elegida usa subrayado y estado accesible. El visto indica un hallazgo guardado. |
 | Evidencia | La imagen mantiene su encuadre. La foto del Partenón tiene pie y créditos propios. La ilustración lleva rótulo visible. |
 | Entradas | Portada y estaciones reutilizan marco, espaciado, línea y comportamiento de botones. En pantallas estrechas se apilan las columnas y la barra usa dos estaciones por fila. |
@@ -36,6 +36,12 @@ El sitio sirve HTML estático, CSS y módulos ES nativos. Los estados de la aven
 | Respuesta | La confirmación asienta el hallazgo en 320 ms. La revisión aparece en 190 ms con un desplazamiento menor. La explicación queda escrita. |
 
 La curva de llegada es `cubic-bezier(.22, 1, .36, 1)`. Los estados finales se aplican mediante el flujo normal de la app. Una nueva navegación cancela la transición anterior. Las animaciones de interfaz son finitas. La única animación ambiental continua permanece en el visor 3D cuando está activo. El modo de movimiento reducido cancela transiciones y elimina el desplazamiento visual.
+
+## Validación
+
+Playwright ejecutó el sitio en Chrome con un perfil aislado. Se comprobaron portada y Exploración a 1.440 × 900 y 390 × 844, texto al 130 % a 320 px, selección de estación, acierto y revisión, y entrada y regreso del visor 3D. La prueba confirmó que el modelo y la panorámica de respaldo se solicitan al abrir el visor. Las capturas posteriores a la revisión muestran el pie de portada al final de la pantalla sin cubrir controles.
+
+Chrome sin interfaz gráfica ejecutó las transiciones nativas de sección y estación. El intervalo mediano entre callbacks de `requestAnimationFrame` fue de 9,6 y 9,7 ms respectivamente. Son observaciones del entorno de prueba. Para confirmar el rendimiento en aula hace falta medir en sus equipos.
 
 ## Imagen de portada
 

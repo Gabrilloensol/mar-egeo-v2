@@ -18,7 +18,13 @@
   --menu-display: 'Egeo Display', Georgia, serif;
   --menu-settle: cubic-bezier(.22, 1, .36, 1);
 }
-.odyssey-menu[data-mode=inicio] { overflow-y: auto; background: var(--menu-ink); }
+.odyssey-menu[data-mode=inicio] {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: var(--menu-ink);
+}
+.odyssey-menu[data-mode=inicio] #primary { flex: 1; align-content: center; }
 .odyssey-menu[data-mode=inicio] #world { visibility: hidden; }
 .odyssey-menu > header {
   gap: 16px;
@@ -91,7 +97,7 @@
   color: var(--menu-paper);
   background: transparent;
   border: 0;
-  font-size: .82rem;
+  font: 650 .82rem/1.35 system-ui, sans-serif;
 }
 .menu-cover {
   position: relative;
@@ -136,6 +142,7 @@
 }
 .odyssey-menu[data-explore-view=field] .station::before { display: none; }
 .odyssey-menu[data-explore-view=field] .station[aria-pressed=true] { background: #1c3540; box-shadow: none; }
+.odyssey-menu[data-explore-view=field] .station:last-child { border-right: 0; }
 .station-indicator { display: none; }
 .odyssey-menu[data-explore-view=field] .station[aria-pressed=true] .station-indicator {
   display: block;
@@ -197,6 +204,7 @@
   .odyssey-menu > header nav button { font-size: .74rem; }
   .odyssey-menu #journey-start, .odyssey-menu #intro #start { width: 100%; justify-content: center; }
   .odyssey-menu[data-explore-view=field] .station { min-height: 54px; }
+  .odyssey-menu[data-explore-view=field] .station:nth-child(2) { border-right: 0; }
   .menu-shortcuts { margin-top: 15px; }
 }
 .odyssey-menu.contrast :is(.menu-cover, .site-gallery, .site-study, .station, .menu-primary-actions) { --menu-line: #fff; }

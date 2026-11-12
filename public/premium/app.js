@@ -227,6 +227,7 @@ updateProgress();persist();
 // The illustrated menu is ready before downloading the 3D sanctuary.
 function prepareWorld() {
   if (worldRequest) return worldRequest;
+  $('fallback').src = $('fallback').dataset.src;
   worldRequest = import('./world.js?v=premium3').then(async ({Sanctuary}) => {
     const renderer = new Sanctuary($('scene'), sites, () => mode);
     world = renderer;
