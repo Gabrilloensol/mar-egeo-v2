@@ -1,4 +1,4 @@
-import {gods,sites} from './content.js';
+import {gods,sites} from './content.js?v=explore14';
 import {icon} from './icons.js';
 import {uiIcon} from './ui-icons.js';
 import {createDeck,recordReview} from './study.js';
@@ -14,7 +14,7 @@ export function setupJournal({getState,setState,persist,showDialog,openCodex,exp
   sites.forEach((s,i)=>{
    const recovered=state.visited.includes(s.id),g=gods.find(g=>g.id===s.god);const card=document.createElement('details');card.className='record-card';
    card.innerHTML=`<summary><span class="record-symbol" aria-hidden="true">${icon(g.id)}</span><span><small>HUELLA ${i+1} · ${recovered?'EXPLORADA':'POR EXPLORAR'}</small><strong>${s.name}</strong></span><span class="record-open">Ver y escribir</span></summary><div class="record-body"><p class="record-evidence"></p><label>Mi interpretación<textarea maxlength="1200" rows="3" placeholder="¿Qué observaste? ¿Qué otra evidencia buscarías?"></textarea></label><span class="note-status" role="status"></span></div>`;
-   card.querySelector('.record-evidence').textContent=recovered?s.feedback:'Explora este lugar y resuelve su pregunta para incorporar la interpretación a tu cuaderno.';
+   card.querySelector('.record-evidence').textContent=recovered?(state.answerRevisions?.[s.id]===2?s.feedback:s.legacyFeedback):'Explora este lugar y resuelve su pregunta para incorporar la interpretación a tu cuaderno.';
    const input=card.querySelector('textarea');input.value=state.notes[s.id]||'';input.setAttribute('aria-label','Mi interpretación: '+s.name);
    input.oninput=()=>{const st=getState();setState({...st,notes:{...st.notes,[s.id]:input.value.slice(0,1200)}});const saved=persist();card.querySelector('.note-status').textContent=saved?'Nota guardada.':'Nota en memoria; exporta tu cuaderno para conservarla.';};
    $('journal-records').append(card);
