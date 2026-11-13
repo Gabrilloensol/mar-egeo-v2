@@ -1,0 +1,90 @@
+/* Navigation is a fixed visual landmark in the composition, with native links. */
+.odyssey-menu #intro:not([hidden]) { align-content: center; padding-bottom: clamp(130px, 20vh, 200px); }
+.odyssey-menu #intro h1 { font-size: clamp(3.8rem, 6.3vw, 6.8rem); }
+.odyssey-menu .menu-cover img { object-position: 62% 46%; }
+.odyssey-menu .menu-cover figcaption { bottom: clamp(110px, 16vh, 150px); }
+.folio-home-dock {
+  position: absolute;
+  inset: auto var(--menu-gutter) 26px;
+  display: grid;
+  grid-template-columns: 1.18fr repeat(2, 1fr);
+  z-index: 2;
+  border: 1px solid var(--folio-rule);
+  border-top-color: #ddc799a0;
+  background: #0d2231f5;
+  box-shadow: 0 16px 36px #0006;
+  pointer-events: auto;
+}
+.odyssey-menu #intro .folio-home-dock > * {
+  min-width: 0;
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 13px;
+  padding: 12px 18px;
+  margin: 0;
+  width: 100%;
+  border: 0;
+  border-right: 1px solid var(--folio-rule);
+  background: transparent;
+  color: #fff0d5;
+  font: 680 .9rem/1.35 system-ui,sans-serif;
+  text-align: left;
+  text-decoration: none;
+  transition: background-color var(--folio-press), color var(--folio-press);
+}
+.odyssey-menu #intro .folio-home-dock > :last-child { border-right: 0; }
+.folio-home-dock > :is(a,button):hover { background: #253e4c; color: #fff3d2; }
+.folio-home-dock .ui-icon { color: var(--folio-brass); width: 24px; height: 24px; }
+.folio-home-dock .dock-arrow { margin-left: auto; color: var(--folio-brass); }
+.folio-compass {
+  width: clamp(56px, 7.4vw, 104px);
+  height: auto;
+  display: block;
+  aspect-ratio: 1;
+}
+.folio-home-compass { position: absolute; right: var(--menu-gutter); top: 26px; opacity: .9; }
+.folio-atlas-title { display: flex; align-items: center; gap: 12px; }
+.folio-atlas-title .folio-compass { width: 60px; }
+.odyssey-menu[data-explore-view=3d] .folio-atlas-title .folio-compass { display: none; }
+.odyssey-menu[data-explore-view=field] .site-gallery { background: var(--folio-panel); }
+.odyssey-menu[data-explore-view=field] #site-card[data-station=altar] .site-study { --folio-paper: #eadbcc; background: var(--folio-paper); }
+.odyssey-menu[data-explore-view=field] #site-card[data-station=olivo] .site-study { --folio-paper: #e0e4ce; background: var(--folio-paper); }
+.odyssey-menu[data-explore-view=field] #site-card[data-station=puerto] .site-study { --folio-paper: #dbe5e2; background: var(--folio-paper); }
+.odyssey-menu.contrast[data-explore-view=field] #site-card .site-study { background: #fff9e9; }
+.odyssey-menu #site-card .site-visual-controls button { min-width: 100px; }
+.odyssey-menu #site-card .site-visual-controls button:active { transform: translateY(1px); }
+
+/* The original image, compass, and active station travel on separate tracks. */
+:root[data-menu-motion=section] .folio-compass { view-transition-name: folio-compass; }
+:root[data-menu-motion=section] .folio-home-dock { view-transition-name: folio-dock; }
+:root[data-menu-motion=section] .folio-atlas-title > div { view-transition-name: folio-atlas-copy; }
+:root[data-menu-motion=section] #exploration .exp-heading { view-transition-name: none; }
+:root[data-menu-motion=section]::view-transition-group(*) { animation-duration: var(--folio-section); animation-timing-function: var(--folio-enter); }
+:root[data-menu-motion=section]::view-transition-group(folio-compass) { animation-duration: 315ms; }
+:root[data-menu-motion=section]::view-transition-old(folio-dock) { animation: folio-depart 170ms var(--folio-exit) both; }
+:root[data-menu-motion=section]::view-transition-new(folio-dock) { animation: folio-rail-in 255ms 125ms var(--folio-enter) both; }
+:root[data-menu-motion=section]::view-transition-new(atlas-rail) { animation: folio-rail-in 280ms 95ms var(--folio-enter) both; }
+:root[data-menu-motion=section]::view-transition-new(folio-atlas-copy) { animation: folio-rail-in 140ms 315ms var(--folio-enter) both; }
+:root[data-menu-motion=section]::view-transition-old(folio-atlas-copy) { animation: folio-depart 140ms var(--folio-exit) both; }
+:root[data-menu-motion=section]::view-transition-new(egeo-study) { animation: folio-leaf 270ms 130ms var(--folio-enter) both; }
+:root[data-menu-motion=station]::view-transition-group(*) { animation-duration: var(--folio-station); animation-timing-function: var(--folio-enter); }
+:root[data-menu-motion=station]::view-transition-old(egeo-study) { animation: folio-depart 145ms var(--folio-exit) both; }
+:root[data-menu-motion=station]::view-transition-new(egeo-study) { animation: folio-leaf 240ms 70ms var(--folio-enter) both; }
+@keyframes folio-rail-in { from { clip-path: inset(0 100% 0 0); opacity: .55; } to { clip-path: inset(0); opacity: 1; } }
+@keyframes folio-leaf { from { clip-path: inset(0 0 0 7%); opacity: .4; transform: translateX(7px); } to { clip-path: inset(0); opacity: 1; transform: none; } }
+@keyframes folio-depart { to { opacity: 0; transform: translateY(5px); } }
+@media (max-width: 850px) {
+  .odyssey-menu #intro:not([hidden]) { padding-bottom: 0; }
+  .odyssey-menu #intro h1 { font-size: clamp(3.05rem, 9vw, 5.2rem); }
+  .folio-home-compass { width: 56px; right: 14px; top: 14px; }
+  .odyssey-menu .menu-cover figcaption { bottom: 8px; }
+  .folio-home-dock { position: relative; inset: auto; margin: 0 var(--menu-gutter) 24px; }
+  .odyssey-menu #intro .folio-home-dock > * { flex-direction: column; align-items: flex-start; justify-content: center; gap: 5px; padding: 10px; font-size: .76rem; }
+  .folio-home-dock .dock-arrow { display: none; }
+  .folio-atlas-title .folio-compass { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root[data-menu-motion]::view-transition-old(*), :root[data-menu-motion]::view-transition-new(*) { animation: none !important; }
+}

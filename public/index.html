@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a262d"><title>Odisea del Egeo · El santuario de los dioses</title><link rel="icon" href="assets/icons/odisea.ico"><link rel="stylesheet" href="premium/style.css?v=journey1"><link rel="stylesheet" href="premium/sculptures.css?v=refined6"><link rel="stylesheet" href="premium/exploration.css?v=2"><script type="module" src="premium/app.js?v=atlas18"></script><link rel="stylesheet" href="premium/journey-entry.css?v=journey2"><link rel="stylesheet" href="premium/odyssey-menu.css?v=2"><link rel="stylesheet" href="premium/atlas-interface.css"></head>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a262d"><title>Odisea del Egeo · El santuario de los dioses</title><link rel="icon" href="assets/icons/odisea.ico"><link rel="stylesheet" href="premium/style.css?v=journey1"><link rel="stylesheet" href="premium/sculptures.css?v=refined6"><link rel="stylesheet" href="premium/exploration.css?v=2"><script type="module" src="premium/app.js?v=atlas18"></script><link rel="stylesheet" href="premium/journey-entry.css?v=journey2"><link rel="stylesheet" href="premium/odyssey-menu.css?v=2"><link rel="stylesheet" href="premium/atlas-interface.css"><link rel="stylesheet" href="premium/folio-tokens.css"><link rel="stylesheet" href="premium/folio-sanctuary.css"></head>
 <body class="odyssey-menu" data-mode="inicio">
 <a href="#primary" class="skip">Saltar a la aventura</a>
 <div id="world" aria-label="Santuario insular tridimensional"><img id="fallback" data-src="premium/assets/sanctuary-premium.webp" alt="Reconstrucción artística de un santuario insular del Egeo con templo policromado, altar, olivar, prensa, muelle y nave mercante."><canvas id="scene" aria-label="Escena 3D. Usa las estaciones de exploración para recorrerla con teclado."></canvas><div class="vignette"></div><div id="markers" hidden></div></div>
@@ -13,19 +13,21 @@
         <a id="journey-start" class="gold-button" href="apps/learning-adventure/">Empezar mi aventura <span aria-hidden="true">→</span></a>
         <button id="start" class="text-button" data-ui-icon="compass">Explorar la isla</button>
       </div>
-      <div class="menu-shortcuts">
-        <button id="intro-gallery" class="gallery-entry" data-ui-icon="gallery">Esculturas 3D</button>
-        <button id="intro-codex" class="text-button" data-ui-icon="gods">Conocer a los dioses</button>
-      </div>
     </div>
     <figure class="menu-cover">
       <img src="premium/assets/menu/aegean-sanctuary.jpg" width="1200" height="800" alt="Ilustración de un santuario sobre una isla rocosa del Egeo, iluminado por el sol de la tarde." fetchpriority="high">
       <figcaption>Un santuario imaginado del mar Egeo</figcaption>
     </figure>
+    <img class="folio-compass folio-home-compass" src="premium/assets/menu/compass-rose.svg" width="180" height="180" alt="" aria-hidden="true">
+    <nav class="folio-home-dock" aria-label="Más lugares para descubrir">
+        <a href="apps/olympia/" data-ui-icon="olive">Los Juegos Olímpicos <span class="dock-arrow" aria-hidden="true">→</span></a>
+        <button id="intro-gallery" class="gallery-entry" data-ui-icon="gallery">Esculturas 3D <span class="dock-arrow" aria-hidden="true">→</span></button>
+        <button id="intro-codex" class="text-button" data-ui-icon="gods">Conocer a los dioses <span class="dock-arrow" aria-hidden="true">→</span></button>
+      </nav>
   </section>
 <section id="exploration" hidden aria-label="Exploración del santuario">
   <div class="exp-heading">
-    <div><h2>Explora la isla</h2><p id="progress">0 de 4 lugares explorados</p><div class="progress-track"><span id="progress-bar"></span></div></div>
+    <div class="folio-atlas-title"><img class="folio-compass" src="premium/assets/menu/compass-rose.svg" width="180" height="180" alt="" aria-hidden="true"><div><h2>Explora la isla</h2><p id="progress">0 de 4 lugares explorados</p><div class="progress-track"><span id="progress-bar"></span></div></div></div>
     <button id="explore-view" class="outline-button" type="button" aria-pressed="false" hidden>Vista 3D</button>
   </div>
   <nav id="stations" aria-label="Estaciones de exploración"></nav>

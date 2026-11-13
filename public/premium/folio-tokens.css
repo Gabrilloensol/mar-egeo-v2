@@ -1,0 +1,13 @@
+:root {
+  --folio-ink: #0a1a24;
+  --folio-panel: #132a36;
+  --folio-brass: #e4c78d;
+  --folio-paper: #eee3cb;
+  --folio-rule: #b29c7066;
+  --folio-display: 'Egeo Display', Georgia, serif;
+  --folio-enter: cubic-bezier(.18,.79,.29,1);
+  --folio-exit: cubic-bezier(.55,.08,.65,.39);
+  --folio-section: 460ms;
+  --folio-station: 320ms;
+  --folio-press: 120ms;
+}

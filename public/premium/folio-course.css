@@ -1,0 +1,39 @@
+#main .folio-course { padding-top: 30px; }
+#main .folio-course-head { display: flex; align-items: end; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--folio-rule); }
+#main .folio-course-head h1 { font: 600 clamp(2.85rem, 6vw, 5.2rem)/.93 var(--folio-display); margin: 6px 0 10px; }
+#main .folio-course-head p { margin: 0; }
+#main .folio-course-head p:not(.eyebrow) { color: #c6d5d5; font-size: .85rem; }
+#main .folio-course-layout { display: grid; grid-template-columns: minmax(0,1.24fr) minmax(0,1fr); gap: 20px; align-items: start; }
+#main .folio-course-chart { margin: 0; border: 1px solid var(--folio-rule); background: var(--folio-panel); }
+#main .folio-course-image { position: relative; isolation: isolate; }
+#main .folio-course-image img { display: block; width: 100%; height: auto; }
+#main .folio-course-chart figcaption { padding: 9px 13px; color: #e2d7ba; font-size: .8rem; }
+#main .folio-course-trace { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; fill: none; stroke-linecap: round; }
+.folio-trace-shadow { stroke: #10232c; stroke-width: 7; opacity: .75; }
+.folio-trace-line { stroke: #ffe1a1; stroke-width: 2.5; stroke-dasharray: .021 .014; }
+.folio-marker circle { fill: #132b37; stroke: #cfb784; stroke-width: 1.6; transition: fill 160ms; }
+.folio-marker text { fill: #ffefcf; stroke: none; text-anchor: middle; font: 700 15px system-ui,sans-serif; }
+.folio-marker[data-route-state=open] circle { fill: #b6975e; stroke: #fff3d1; stroke-width: 2.4; }
+.folio-marker[data-route-state=open] text { fill: #13232d; }
+.folio-marker[data-route-state=done] circle { fill: #345447; stroke: #daead1; }
+#main .folio-course-layout:has([data-route=place] button:is(:hover,:focus-visible)) [data-marker-stage=place] circle,
+#main .folio-course-layout:has([data-route=sea] button:is(:hover,:focus-visible)) [data-marker-stage=sea] circle,
+#main .folio-course-layout:has([data-route=daily] button:is(:hover,:focus-visible)) [data-marker-stage=daily] circle,
+#main .folio-course-layout:has([data-route=legacy] button:is(:hover,:focus-visible)) [data-marker-stage=legacy] circle,
+#main .folio-course-layout:has([data-route=source] button:is(:hover,:focus-visible)) [data-marker-stage=source] circle { stroke: #fff3d1; stroke-width: 4; }
+#main .folio-course .curriculum-route { margin: 0; }
+#main .folio-course .curriculum-route button { grid-template-columns: auto minmax(0,1fr) auto; min-height: 69px; gap: 10px; }
+#main .folio-course .curriculum-route button strong { font-size: .98rem; }
+#main .folio-course .curriculum-route button small { font-size: .76rem; }
+#main .folio-course .route-number { width: 38px; height: 38px; }
+#main .folio-route-index { display: block; margin: 0; font-size: .95rem; }
+#main .folio-route-status { text-align: right; color: #f0d49e; max-width: 9ch; }
+#main .folio-course-links { margin-top: 20px; }
+#main .folio-course-links .olympia-entry { margin-bottom: 14px; }
+#main .folio-course.screen-enter .folio-trace-shadow { animation: trace-enter 660ms var(--folio-enter) both; }
+#main .folio-course.screen-enter .folio-trace-line { animation: route-expose 620ms var(--folio-enter) both; }
+@keyframes trace-enter { from { opacity: 0; } to { opacity: .75; } }
+@keyframes route-expose { from { clip-path: inset(0 88% 0 0); } to { clip-path: inset(0); } }
+body.reduced #main .folio-course-trace * { animation: none !important; transition: none; }
+@media (prefers-reduced-motion: reduce) { #main .folio-course-trace * { animation: none !important; transition: none; } }
+@media (max-width: 850px) { #main .folio-course-layout { grid-template-columns: minmax(0,1fr); } }

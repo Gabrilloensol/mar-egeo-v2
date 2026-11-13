@@ -1,4 +1,4 @@
-import {units,courseMap,courseLesson,courseRecord,courseTeacher,answerCourse,unitOpen,unitDone} from '../../premium/curriculum.js?v=olympia19';
+import {units,courseMap,courseLesson,courseRecord,courseTeacher,answerCourse,unitOpen,unitDone} from '../../premium/curriculum.js?v=folio20';
 import {createPresentation} from '../../premium/adventure-presentation.js';
 import {createVoice} from '../../premium/adventure-voice.js';
 import {readPreferences,writePreferences,preferenceKey} from '../../premium/shared-preferences.js';
