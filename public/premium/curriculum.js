@@ -1,6 +1,6 @@
 import {folioCourseMap} from './folio-route.js';
-import {activities} from './course-activities.js';
-import {renderCourseActivity} from './course-activity-view.js?v=trade21';
+import {activities} from './course-activities.js?v=museum22';
+import {renderCourseActivity} from './course-activity-view.js?v=museum22';
 // Activities are evidence opportunities, never an automatic grade.
 export const units=[
  {id:'place',title:'¿Dónde y cuándo?',icon:'compass',image:'map',oa:'OA 09 · OAH d',summary:'Ubica Grecia y reconoce el Egeo.',tasks:[
@@ -38,7 +38,26 @@ export function answerCourse(c,id,selected){const t=tasks.find(t=>t.id===id);if(
 export function courseMap(c, tools) {
   return folioCourseMap(units, c, tools, {unitDone, unitOpen, courseDone});
 }
-function visual(type,asset){if(type==='world'||type==='greece')return `<figure class="course-visual map-visual"><img src="${asset('premium/assets/curriculum/'+type+'.svg')}" alt="${type==='world'?'Mapamundi: Chile en América del Sur y Grecia en Europa.':'Mapa geográfico de Grecia y su entorno: mar Egeo entre Grecia y la costa de Asia Menor; Mediterráneo al sur.'}"><button class="button map-expand" data-course-map="${type}">Ampliar mapa</button><figcaption>Cartografía Natural Earth · dominio público. Límites actuales como referencia, no fronteras de la antigua Grecia.</figcaption></figure>`;if(type==='museum')return `<figure class="course-visual museum-visual"><img src="${asset('premium/assets/sources/met-amphora-248662.jpg')}" alt="Fotografía de un ánfora conservada, con dos asas y figuras pintadas"><figcaption>Objeto antiguo · foto de The Met · 12.198.4 · dominio público</figcaption><details><summary>Ficha de la pieza</summary><p>Terracota, Ática, hacia 530–520 a. C. Atribuida al Grupo de Bateman. Rogers Fund, 1912.</p><a href="https://www.metmuseum.org/art/collection/search/248662" target="_blank" rel="noopener">Consultar el museo ↗</a></details></figure>`;if(type==='timeline')return `<figure class="course-visual temple-photo"><img src="${asset('premium/assets/curriculum/parthenon-2008.jpg')}" width="960" height="704" alt="Fotografía del Partenón en Atenas: columnas de piedra, partes del techo conservadas y andamios de restauración."><figcaption><strong>El Partenón · Atenas, Grecia</strong><span>Templo: hace unos 2.500 años · Fotografía: 2008</span></figcaption><details><summary>Fuente de la fotografía</summary><p>Foto: Kallistos · corrección de perspectiva: Neokortex. Versión reducida a 960 píxeles, sin recorte.</p><a href="https://commons.wikimedia.org/wiki/File:Parthenon-2008_entzerrt.jpg" target="_blank" rel="noopener">Ver fotografía original ↗</a> · <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">Licencia CC BY 3.0 ↗</a></details></figure>`;if(type==='compare')return `<div class="course-visual comparison"><article><span>ANTES</span><strong>Necesidades y encuentros</strong><p>Vestirse · trabajar · participar</p></article><span aria-hidden="true">↔</span><article><span>HOY</span><strong>Tu vida y tu comunidad</strong><p>¿Qué continúa? ¿Qué cambió?</p></article></div>`;return `<figure class="course-visual"><img src="${asset(type==='sea'?'apps/aa-campaign-map/assets/chapter-egeo.webp':'premium/assets/adventure/polis-landscape-v1.webp')}" alt="Interpretación artística de ${type==='sea'?'islas y puertos del Egeo':'una ciudad griega con edificios y espacios comunes'}"><figcaption>Ilustración didáctica · ciudad y viaje imaginados, no réplica arqueológica.</figcaption></figure>`;}
+function museumVisual(asset) {
+  return `<div class="course-visual museum-visual">
+    <figure>
+      <img src="${asset('premium/assets/sources/met-amphora-248662.jpg')}" width="600" height="600" alt="Ánfora con dos asas y figuras oscuras pintadas sobre un fondo anaranjado">
+      <figcaption>Foto de The Met · Rogers Fund, 1912 · 12.198.4 · dominio público</figcaption>
+    </figure>
+    <section class="museum-facts" aria-labelledby="museum-facts-title">
+      <h2 id="museum-facts-title">Ficha de la pieza</h2>
+      <dl>
+        <div><dt>Pieza</dt><dd>Ánfora (vasija de dos asas)</dd></div>
+        <div><dt>Material</dt><dd>Terracota (barro cocido)</dd></div>
+        <div><dt>Lugar</dt><dd>Ática, Grecia</dd></div>
+        <div><dt>Fecha</dt><dd>Entre 530 y 520 a. C., aproximadamente</dd></div>
+        <div><dt>Autoría</dt><dd>Atribuida al Grupo de Bateman</dd></div>
+      </dl>
+      <a href="https://www.metmuseum.org/art/collection/search/248662" target="_blank" rel="noopener">Ver la ficha en The Met ↗</a>
+    </section>
+  </div>`;
+}
+function visual(type,asset){if(type==='world'||type==='greece')return `<figure class="course-visual map-visual"><img src="${asset('premium/assets/curriculum/'+type+'.svg')}" alt="${type==='world'?'Mapamundi: Chile en América del Sur y Grecia en Europa.':'Mapa geográfico de Grecia y su entorno: mar Egeo entre Grecia y la costa de Asia Menor; Mediterráneo al sur.'}"><button class="button map-expand" data-course-map="${type}">Ampliar mapa</button><figcaption>Cartografía Natural Earth · dominio público. Límites actuales como referencia, no fronteras de la antigua Grecia.</figcaption></figure>`;if(type==='museum')return museumVisual(asset);if(type==='timeline')return `<figure class="course-visual temple-photo"><img src="${asset('premium/assets/curriculum/parthenon-2008.jpg')}" width="960" height="704" alt="Fotografía del Partenón en Atenas: columnas de piedra, partes del techo conservadas y andamios de restauración."><figcaption><strong>El Partenón · Atenas, Grecia</strong><span>Templo: hace unos 2.500 años · Fotografía: 2008</span></figcaption><details><summary>Fuente de la fotografía</summary><p>Foto: Kallistos · corrección de perspectiva: Neokortex. Versión reducida a 960 píxeles, sin recorte.</p><a href="https://commons.wikimedia.org/wiki/File:Parthenon-2008_entzerrt.jpg" target="_blank" rel="noopener">Ver fotografía original ↗</a> · <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="noopener">Licencia CC BY 3.0 ↗</a></details></figure>`;if(type==='compare')return `<div class="course-visual comparison"><article><span>ANTES</span><strong>Necesidades y encuentros</strong><p>Vestirse · trabajar · participar</p></article><span aria-hidden="true">↔</span><article><span>HOY</span><strong>Tu vida y tu comunidad</strong><p>¿Qué continúa? ¿Qué cambió?</p></article></div>`;return `<figure class="course-visual"><img src="${asset(type==='sea'?'apps/aa-campaign-map/assets/chapter-egeo.webp':'premium/assets/adventure/polis-landscape-v1.webp')}" alt="Interpretación artística de ${type==='sea'?'islas y puertos del Egeo':'una ciudad griega con edificios y espacios comunes'}"><figcaption>Ilustración didáctica · ciudad y viaje imaginados, no réplica arqueológica.</figcaption></figure>`;}
 export function courseLesson(c,{icon,asset,esc}) {
   const unit = units[c.unit];
   const task = unit.tasks[c.step];

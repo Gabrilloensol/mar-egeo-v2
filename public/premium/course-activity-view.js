@@ -11,7 +11,7 @@ const evidence = {
   today: ['Dos maneras de tejer', 'Compara el telar de madera y la máquina.'],
   theatre: ['Una obra en el teatro', 'Distingue a los actores del público sentado.'],
   games: ['Dos premios', 'Compara lo que recibe un ganador en cada época.'],
-  rights: ['Participar en Atenas', 'Compara quién podía tomar decisiones y quién quedaba fuera.'],
+  rights: ['La asamblea de Atenas', 'Mira quién habla y quiénes levantan la mano. Luego compara los dos grupos.'],
   object: ['Foto y ficha del museo', 'Observa la pieza y compara lo que ves con lo que dice el museo.'],
   limit: ['Lo que podemos ver', 'Las asas y las figuras están en la imagen. ¿Qué quedaría por averiguar?'],
   transfer: ['Una ficha por completar', 'Imagina otra pieza y elige cómo investigar su historia.'],
@@ -24,12 +24,13 @@ const scenes = {
   today: ['premium/assets/curriculum/textile-looms.jpg', 'A la izquierda se teje en un telar de madera. A la derecha, una máquina moderna teje tela azul.'],
   theatre: ['premium/assets/curriculum/greek-theatre.jpg', 'Ilustración de actores en un espacio abierto frente a personas sentadas en gradas.'],
   games: ['premium/assets/curriculum/olympic-awards.jpg', 'Una corona de hojas de olivo junto a una medalla dorada con cinta azul.'],
+  rights: ['premium/assets/curriculum/athenian-assembly.jpg', 'En una ladera de Atenas, un hombre habla desde una roca y varios hombres levantan la mano para votar.', 'Recreación artística de una asamblea ateniense'],
 };
 
 const pairs = {
   today: [['Antes', 'Telar de madera'], ['Hoy', 'También hay máquinas']],
   games: [['Olimpia', 'Corona de olivo'], ['Juegos actuales', 'Medalla']],
-  rights: [['Podían participar', 'Ciudadanos hombres adultos'], ['No podían participar', 'Mujeres, extranjeros y personas esclavizadas']],
+  rights: [['Podían votar', 'Hombres adultos con ciudadanía'], ['No podían votar', 'Mujeres, personas extranjeras y personas esclavizadas']],
   transfer: [['Lo que tienes', 'Una foto de la nueva vasija'], ['Lo que buscas', 'Su lugar de origen y su fecha']],
 };
 
@@ -39,7 +40,7 @@ function renderEvidence(task, answer, {icon, asset}, baseVisual) {
   const scene = scenes[task.id];
   const pair = pairs[task.id];
   const comparison = pair ? `<dl class="evidence-pair">${pair.map(([label, detail]) => `<div><dt>${label}</dt><dd>${detail}</dd></div>`).join('')}</dl>` : '';
-  const picture = scene ? `<figure class="lesson-illustration"><img src="${asset(scene[0])}" alt="${scene[1]}" width="960" height="640"><figcaption>Ilustración didáctica</figcaption></figure>` : '';
+  const picture = scene ? `<figure class="lesson-illustration"><img src="${asset(scene[0])}" alt="${scene[1]}" width="960" height="640"><figcaption>${scene[2] ?? 'Ilustración didáctica'}</figcaption></figure>` : '';
   const source = !scene && !pair ? baseVisual(task.visual, asset) : '';
   return `<section class="lesson-evidence" aria-labelledby="evidence-title">
     <header class="evidence-heading" id="lesson-evidence-copy"><h2 id="evidence-title">${title}</h2><p>${prompt}</p></header>

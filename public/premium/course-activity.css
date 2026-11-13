@@ -73,6 +73,25 @@
   margin: 24px 0;
 }
 #main .course-research .museum-visual { margin: 0; }
+#main .museum-visual figure { margin: 0; }
+#main .museum-facts {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--stage-edge, #637d78);
+}
+#main .museum-facts h2 { margin: 0 0 10px; font-size: 1.15rem; }
+#main .museum-facts dl { margin: 0; }
+#main .museum-facts dl > div { display: flex; flex-wrap: wrap; gap: 0 .5em; }
+#main .museum-facts dl > div + div { margin-top: .25em; }
+#main .museum-facts dt { font-weight: 700; }
+#main .museum-facts dd { margin: 0; }
+#main .museum-facts a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
 #main .research-form {
   padding: clamp(16px, 3vw, 24px);
   border: 1px solid var(--stage-edge);
