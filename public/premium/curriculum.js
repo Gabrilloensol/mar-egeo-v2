@@ -1,6 +1,6 @@
 import {folioCourseMap} from './folio-route.js';
 import {activities} from './course-activities.js';
-import {renderCourseActivity} from './course-activity-view.js?v=olympia19';
+import {renderCourseActivity} from './course-activity-view.js?v=trade21';
 // Activities are evidence opportunities, never an automatic grade.
 export const units=[
  {id:'place',title:'¿Dónde y cuándo?',icon:'compass',image:'map',oa:'OA 09 · OAH d',summary:'Ubica Grecia y reconoce el Egeo.',tasks:[

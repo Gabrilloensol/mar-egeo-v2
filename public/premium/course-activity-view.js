@@ -1,4 +1,4 @@
-import {tradeScene} from './trade-scene.js';
+import {tradeScene} from './trade-scene.js?v=trade21';
 import {tradeWords} from './curriculum-trade.js?v=activities13';
 
 const evidence = {
