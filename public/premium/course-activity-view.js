@@ -91,6 +91,7 @@ export function renderCourseActivity({unit, unitIndex, task, step, answer, icon,
         <div class="activity-help">
           <details class="help" data-course-hint="${task.id}"><summary>Ver una pista</summary><p>${task.hint}</p></details>
           ${task.id === 'trade' ? tradeWords() : ''}
+          ${task.id === 'games' ? `<a class="button" href="${asset('apps/olympia/')}">${icon('olive')}Visitar Olimpia</a>` : ''}
         </div>
         <button class="primary" data-course-next ${correct ? '' : 'disabled'}>${lastStep ? 'Guardar hallazgo' : 'Seguir explorando'} →</button>
       </section>

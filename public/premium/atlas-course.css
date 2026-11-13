@@ -35,3 +35,18 @@ body { background: #0b202b; }
 #main .course-task .choice, #main .course-activity .response-story { border-radius: 5px; }
 #main .course-page .course-task { background: #122e3a; }
 body.contrast #main .course-page .course-task { background: #061922; }
+#main .olympia-entry {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 13px 17px;
+  border: 1px solid var(--atlas-course-stroke);
+  border-left: 3px solid #e5c98c;
+  background: #162d36;
+  color: #f6ecd7;
+  text-decoration: none;
+}
+#main .olympia-entry:hover { background: #24414b; }
+#main .olympia-entry strong, #main .olympia-entry small { display: block; }
+#main .olympia-entry small { margin-top: 3px; color: #cddbd4; font-weight: 400; }
