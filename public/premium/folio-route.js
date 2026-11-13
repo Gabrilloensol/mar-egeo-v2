@@ -21,7 +21,7 @@ export function folioCourseMap(units, state, {icon, asset}, {unitDone, unitOpen,
   });
   return `<section class="book-page curriculum-home folio-course">
     <header class="folio-course-head">
-      <div><p class="eyebrow">GRECIA ANTIGUA · 3.º BÁSICO</p><h1>Tu ruta por Grecia</h1><p>${count} de ${units.length} etapas recorridas</p></div>
+      <div><p class="eyebrow">GRECIA ANTIGUA · 3.º BÁSICO</p><h1>Tu ruta por Grecia</h1><div class="route-completion"><progress value="${count}" max="${units.length}" aria-label="Etapas recorridas"></progress><span>${count} de ${units.length} etapas recorridas</span></div></div>
       <button class="primary" data-course-continue="${resume}">${title} →</button>
     </header>
     <div class="folio-course-layout">
@@ -33,15 +33,15 @@ export function folioCourseMap(units, state, {icon, asset}, {unitDone, unitOpen,
         const label = status==='done' ? 'Recorrida' : available ? 'Disponible' : 'Más adelante';
         return `<li data-route="${unit.id}" data-route-state="${status}">
           <button data-course-unit="${index}" ${available ? '' : 'disabled'}>
-            <span class="route-number"><span class="folio-route-index">${index+1}</span></span>
+            <span class="route-number" data-stage-emblem="${unit.id}" aria-hidden="true">${icon(unit.icon)}<span class="route-pin-number">${index+1}</span></span>
             <span><strong>${unit.title}</strong><small>${unit.summary}</small></span>
-            <small class="folio-route-status">${label}</small>
+            <small class="folio-route-status">${icon(status==='done'?'check':available?'compass':'lock')}${label}</small>
           </button>
         </li>`;
       }).join('')}</ol>
     </div>
     <div class="folio-course-links">
-      <a class="olympia-entry" href="${asset('apps/olympia/')}">${icon('olive')}<span><strong>Los Juegos Olímpicos</strong><small>Visita Olimpia y compara los juegos de antes y de hoy.</small></span><span aria-hidden="true">→</span></a>
+      <a class="olympia-entry" href="${asset('apps/olympia/')}"><img src="${asset('premium/assets/curriculum/olympic-awards.jpg')}" alt="" width="160" height="92" loading="lazy"><span><strong>Los Juegos Olímpicos</strong><small>Visita Olimpia y compara los juegos de antes y de hoy.</small></span><span aria-hidden="true">→</span></a>
       <details class="help"><summary>Explorar y practicar más</summary><p>Recorre las etapas en distintas sesiones y revisa tus hallazgos con tu docente.</p><div class="actions"><button class="button" data-action="practice">Misiones de práctica</button><a class="button" href="${asset('?escultura=zeus&volver=aventura')}">Galería de dioses</a></div></details>
       <button class="button" data-action="teacher">Guía docente</button>
     </div>

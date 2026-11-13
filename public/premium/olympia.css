@@ -52,11 +52,13 @@ h3 { font-size: clamp(1.55rem, 3vw, 2rem); margin: 18px 0 10px; }
 .feedback-audio { margin: 0 8px 8px 0; }
 .olympia-button:hover { filter: brightness(.95); }
 .olympia-choices { display: grid; gap: 8px; margin-bottom: 12px; }
-.olympia-choices button { min-height: 48px; padding: 9px 13px; text-align: left; background: #f8efd9; border: 1px solid #a7926b; border-radius: 4px; font-weight: 650; }
+.olympia-choices button { display: grid; grid-template-columns: 28px 1fr; align-items: center; gap: 9px; width: 100%; min-height: 48px; padding: 9px 13px; text-align: left; background: #f8efd9; border: 1px solid #a7926b; border-radius: 4px; font-weight: 650; }
+.olympia-answer-mark { display: grid; place-items: center; height: 28px; width: 28px; border: 1px solid #8c7a5b; border-radius: 50%; font-size: .85em; }
+.olympia-answer-mark .ui-icon { width: 19px; height: 19px; }
 .olympia-choices button:hover, .olympia-choices button[aria-pressed=true] { border-color: #473a25; background: #e3d3ac; }
 .olympia-choices button[data-result=correct] { border-color: #41664a; background: #dbe6cf; }
 .olympia-choices button[data-result=retry] { border-color: #8e6730; background: #ecdbad; }
-#olympia-feedback:not(:empty) { margin-bottom: 12px; padding: 10px 13px; background: #f8edcf; border-left: 3px solid #8e6730; }
+#olympia-feedback:not(:empty) { display: grid; grid-template-columns: 24px 1fr; gap: 8px; margin: 3px 0 5px; padding: 10px 13px; background: #f8edcf; border-left: 3px solid #8e6730; }
 #olympia-feedback[data-result=correct] { background: #dbe6cf; border-color: #41664a; }
 .olympia-sources { margin-top: 24px; border-top: 1px solid var(--rule); }
 .olympia-sources summary { min-height: 44px; align-content: center; color: var(--brass); cursor: pointer; }

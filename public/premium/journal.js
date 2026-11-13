@@ -1,6 +1,6 @@
 import {gods,sites} from './content.js?v=explore14';
 import {icon} from './icons.js';
-import {uiIcon} from './ui-icons.js';
+import {uiIcon} from './ui-icons.js?v=voyage23';
 import {createDeck,recordReview} from './study.js';
 const $=id=>document.getElementById(id);
 export function setupJournal({getState,setState,persist,showDialog,openCodex,exportNotebook}){
@@ -24,14 +24,16 @@ export function setupJournal({getState,setState,persist,showDialog,openCodex,exp
  $('start-review').onclick=()=>{deck=createDeck(getState().mastery);step=0;results=[];$('journal').close();showDialog('review');renderQuestion();};
  function renderQuestion(){
   locked=false;const q=deck[step];$('review-progress').textContent=`REPASO ${step+1} DE ${deck.length}`;$('review-bar').style.width=(step/deck.length*100)+'%';
-  $('review-stage').hidden=false;$('review-summary').hidden=true;$('review-next').hidden=true;$('review-explanation').textContent='';$('review-options').replaceChildren();
+  const feedback=$('review-explanation');
+  $('review-stage').hidden=false;$('review-summary').hidden=true;$('review-next').hidden=true;feedback.textContent='';delete feedback.dataset.result;$('review-options').replaceChildren();
   $('review-clue-label').textContent=q.kind==='symbol'?'INTERPRETA EL SÍMBOLO':'RECONOCE SU ÁMBITO';$('review-clue').textContent=q.clue;
   $('review-symbol').innerHTML=q.kind==='symbol'?icon(q.id):'<span aria-hidden="true">Ω</span>';
-  for(const option of q.options){const b=document.createElement('button');b.className='review-option';b.textContent=option.name;b.onclick=()=>{
+  for(const [index,option] of q.options.entries()){const b=document.createElement('button');b.className='review-option';b.dataset.god=option.id;b.innerHTML=`<span class="answer-index" aria-hidden="true">${index+1}</span><span></span>`;b.lastElementChild.textContent=option.name;b.onclick=()=>{
     if(locked)return;locked=true;const correct=option.id===q.id;results.push({id:q.id,correct});const st=getState();setState({...st,mastery:recordReview(st.mastery,q.id,correct)});persist();
-    for(const child of $('review-options').children){child.disabled=true;if(child.textContent===gods.find(g=>g.id===q.id).name)child.dataset.result='correct';}
-    if(!correct)b.dataset.result='wrong';
-    $('review-explanation').textContent=(correct?'Bien reconocido. ':'Se relaciona con '+gods.find(g=>g.id===q.id).name+'. ')+q.explanation;
+    for(const child of $('review-options').children){child.disabled=true;if(child.dataset.god===q.id){child.dataset.result='correct';child.firstElementChild.innerHTML=uiIcon('check');}}
+    if(!correct){b.dataset.result='wrong';b.firstElementChild.innerHTML=uiIcon('eye');}
+    feedback.dataset.result=correct?'correct':'wrong';feedback.innerHTML=`${uiIcon(correct?'check':'eye')}<span></span>`;
+    feedback.lastElementChild.textContent=(correct?'Bien reconocido. ':'Se relaciona con '+gods.find(g=>g.id===q.id).name+'. ')+q.explanation;
     $('review-next').hidden=false;$('review-next').textContent=step===deck.length-1?'Ver mi recorrido →':'Siguiente símbolo →';$('review-next').focus();
    };$('review-options').append(b);}
   $('review-clue').focus();

@@ -1,0 +1,209 @@
+/* Shared surfaces, navigation and decisions for the learning adventure. */
+:root {
+  --voyage-surface: #112833;
+  --voyage-line: #778d916e;
+  --voyage-muted: #c3d2d2;
+  --voyage-gold: #ebce93;
+  --voyage-radius: 8px;
+  --voyage-time: 290ms;
+}
+
+body[data-view] { background: radial-gradient(ellipse at 18% 0, #15353d, #0a1b24 66%) fixed; }
+.topbar { background: #0c1f29; }
+.topbar nav { gap: 4px; }
+.topbar nav button[data-nav] {
+  position: relative;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  min-height: 46px;
+  transition: color 150ms, background-color 150ms;
+}
+.topbar nav button[data-nav]:hover { background-color: #ffffff09; }
+.topbar nav button[data-nav][aria-current]:not([aria-current=false]) { color: var(--voyage-gold); }
+.topbar nav button[data-nav][aria-current]:not([aria-current=false])::after {
+  content: '';
+  position: absolute;
+  inset: auto 12px 0;
+  height: 2px;
+  background: currentColor;
+}
+#main h1[tabindex="-1"]:focus { outline: none; }
+#main .folio-course, #main .course-activity, #main .voyage-menu { max-width: 1280px; }
+#main .route-completion { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; color: var(--voyage-muted); font-size: .9rem; }
+.route-completion progress { width: 88px; height: .55rem; accent-color: var(--voyage-gold); }
+#main .folio-course-layout { gap: clamp(14px, 2.4vw, 32px); align-items: stretch; }
+#main .folio-course-chart { align-self: start; border-radius: var(--voyage-radius); overflow: hidden; box-shadow: 0 18px 42px #020b1245; }
+#main .folio-course .curriculum-route { align-self: start; }
+#main .folio-course .curriculum-route button { min-height: 74px; background: transparent; }
+#main .folio-course .curriculum-route [data-route-state=open] button { background: #24373c; box-shadow: inset 3px 0 var(--voyage-gold); }
+#main .folio-course .curriculum-route button:disabled { opacity: .85; }
+#main .folio-course .curriculum-route .route-number { color: var(--voyage-gold); border-color: #c6aa705c; }
+#main .route-number { position: relative; }
+#main .route-number .route-pin-number { position: absolute; inset: auto -5px -5px auto; display: grid; place-items: center; width: 17px; height: 17px; border-radius: 50%; background: #0a1b24; border: 1px solid #a9946a; color: #f5dfb0; font-size: .68rem; line-height: 1; }
+#main .folio-route-status { display: inline-flex; align-items: center; justify-content: end; gap: 5px; max-width: none; }
+#main .folio-route-status .ui-icon { width: 15px; height: 15px; margin: 0; flex: none; }
+#main .folio-course .olympia-entry { grid-template-columns: minmax(66px, 125px) 1fr auto; padding: 0 16px 0 0; }
+#main .olympia-entry img { display: block; width: 100%; height: 100%; min-height: 76px; object-fit: cover; }
+#main .olympia-entry > span:nth-child(2) { padding-block: 10px; }
+
+#main .course-activity .activity-heading {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--stage-edge);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0 0 18px;
+  margin-bottom: clamp(14px, 2vw, 25px);
+}
+#main .course-activity .activity-heading::after { display: none; }
+#main .activity-heading .chapter-emblem { top: auto; bottom: 18px; right: 8px; }
+#main .activity-heading .activity-nav { padding-right: 0; gap: 5px 16px; }
+#main .activity-heading .activity-nav .button { background: transparent; border-radius: 4px; min-height: 44px; }
+#main .activity-heading .activity-nav .eyebrow { min-height: auto; margin: 0; padding: 0; }
+#main .activity-heading .lesson-progress { margin-left: auto; }
+#main .course-activity .activity-heading h1 { max-width: 38ch; padding-right: 86px; margin: 11px 0 0; font-size: clamp(2rem, 4vw, 3.65rem); line-height: 1; text-wrap: balance; }
+#main .course-activity .course-layout { grid-template-columns: minmax(0, 1.17fr) minmax(0, 1fr); gap: clamp(14px, 2.3vw, 30px); }
+#main .course-activity .lesson-evidence { background: var(--voyage-surface); border-color: var(--voyage-line); border-top-color: var(--stage-edge); border-radius: var(--voyage-radius); }
+#main .course-activity .course-task { min-width: 0; background: var(--voyage-surface); padding: clamp(15px, 2.3vw, 28px); border: 1px solid var(--voyage-line); border-top-color: var(--stage-edge); border-radius: var(--voyage-radius); }
+#main .course-activity .activity-title { color: var(--stage-light); font-size: 1.35rem; margin: 0 0 6px; }
+#main .course-activity .course-context { margin-bottom: 11px; color: #e4ecec; }
+#main .activity-audio .button, #main .response-listen { background: transparent; border-color: var(--voyage-line); border-radius: 4px; }
+#main .activity-audio .ui-icon, #main .response-listen .ui-icon { width: 19px; height: 19px; color: var(--stage-light); }
+#main .course-activity .choices { gap: 9px; }
+#main .course-activity .answer-row { min-width: 0; }
+#main .course-activity .choice {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  width: 100%;
+  align-items: center;
+  padding: 10px 14px;
+  gap: 12px;
+  min-height: 54px;
+  border: 1px solid #9bb5b56b;
+  border-radius: 5px;
+  background: #0c242e;
+  box-shadow: none;
+  transition: background-color 130ms, border-color 130ms;
+}
+#main .course-activity .choice > span { padding: 0; }
+#main .course-activity .choice .answer-number { display: grid; place-items: center; width: 29px; height: 29px; margin: 0; }
+#main .choice .answer-number .ui-icon { width: 19px; height: 19px; }
+#main .course-activity .choice:hover { background: #1b3642; border-color: var(--stage-light); transform: none; }
+#main .course-activity .choice:active { transform: translateY(1px); }
+#main .course-activity .choice[aria-pressed=true] { border-color: var(--decision, #efd197); box-shadow: inset 3px 0 var(--decision, #efd197); }
+#main .course-activity .choice[data-answer-state=correct] { --decision: #9fdfbf; background: #163930; }
+#main .course-activity .choice[data-answer-state=reconsider] { background: #342d22; }
+#main .course-activity .choice[aria-pressed=true]::after { content: none; }
+#main .course-activity .choice[aria-pressed=true] .answer-number { color: var(--decision, #efd197); border-color: currentColor; }
+#main .course-activity .response-story {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  margin: 3px 0 5px;
+  padding: 10px 12px 4px;
+  background: #29291f;
+  border: 0;
+  border-left: 3px solid #e0bd76;
+  border-radius: 0 0 4px 4px;
+}
+#main .course-activity .response-story[data-result=correct] { background: #143029; border-color: #9fdfbf; }
+#main .course-activity .response-symbol { width: 29px; height: 29px; border: 0; animation: none; }
+#main .course-activity .response-symbol .ui-icon { width: 26px; height: 26px; }
+#main .course-activity .response-state { display: block; font-size: .75rem; font-weight: 750; color: #f3d79c; }
+#main .course-activity [data-result=correct] .response-state { color: #b8ebd0; }
+#main .course-activity .response-story p { margin-top: 3px; }
+#main .course-activity .response-listen { border: 0; min-height: 44px; padding: 0; margin: 0; text-decoration: underline; text-underline-offset: 3px; }
+#main .course-activity .response-story.feedback-arrive { transform-origin: top; animation: decision-unfold 240ms var(--folio-enter) both; }
+#main .course-activity .response-story[data-result=correct].feedback-arrive { animation-duration: 310ms; }
+#main .course-activity .response-story[data-result=correct].feedback-arrive .response-symbol { animation: discovery-settle 360ms var(--folio-enter) both; }
+@keyframes decision-unfold { from { clip-path: inset(0 0 94% 0); opacity: .65; } to { clip-path: inset(0); opacity: 1; } }
+@keyframes discovery-settle { from { transform: translateY(4px) scale(.82); opacity: .45; } to { transform: none; opacity: 1; } }
+
+#main .voyage-menu h1 { font: 600 clamp(2.4rem, 5.5vw, 4.55rem)/.98 var(--folio-display); margin: 4px 0 10px; }
+#main .voyage-menu .menu-cover {
+  display: grid;
+  align-items: end;
+  min-height: clamp(150px, 21vw, 265px);
+  padding: clamp(20px, 4vw, 44px);
+  margin: 0 0 20px;
+  overflow: hidden;
+  border: 1px solid var(--folio-rule);
+  border-radius: var(--voyage-radius);
+  background: #122731;
+}
+#main .voyage-menu .book-cover { background: linear-gradient(90deg, #0b1a24 4%, #0b1a24df 34%, #0b1a2412 92%), url('./assets/menu/field-notebook.jpg') center 56% / cover; }
+#main .voyage-menu .menu-cover:not(.book-cover) { min-height: 0; padding: 12px 0 20px; background: transparent; border-width: 0 0 1px; border-radius: 0; }
+#main .book-cover p:last-child { margin: 0; max-width: 38ch; color: #e6dfd0; }
+#main .voyage-menu .record { border-radius: var(--voyage-radius); border-color: var(--voyage-line); background: var(--voyage-surface); }
+#main .voyage-menu .menu-split { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); align-items: start; gap: 18px; }
+#main .voyage-menu .menu-panel { min-width: 0; padding: clamp(15px, 3vw, 26px); background: var(--voyage-surface); border: 1px solid var(--voyage-line); border-radius: var(--voyage-radius); }
+#main .voyage-menu .menu-panel h2 { margin: 0 0 10px; }
+#main .voyage-menu .menu-panel .setting { flex-wrap: wrap; gap: 8px; }
+#main .voyage-menu .menu-panel .setting:has([data-pref]) { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+#main .voyage-menu .setting-name { display: inline-flex; align-items: center; gap: 10px; }
+#main .voyage-menu .setting-name svg { width: 23px; height: 23px; color: var(--voyage-gold); }
+#main .voyage-menu [data-pref] { min-height: 44px; padding-inline: 12px; border-radius: 4px; }
+#main .voyage-menu .menu-panel p { margin-block: 12px; }
+#main .voyage-menu .menu-actions { margin-top: 18px; }
+#main .voyage-menu .button:has(input:focus-visible) { outline: 3px solid var(--voyage-gold); outline-offset: 3px; }
+#main .voyage-menu .record h2 { margin-inline: 1.3rem; }
+#main .voyage-menu .record-header h2 { margin-inline: 0; }
+#main .voyage-menu .record .record-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 164px), 1fr)); gap: 0; list-style: none; margin: 14px 1.3rem; padding: 0; border-block: 1px solid var(--voyage-line); }
+#main .record-steps li { padding: 12px; border-right: 1px solid var(--voyage-line); }
+#main .record-steps li:last-child { border-right: 0; }
+#main .record-steps strong, #main .record-steps small { display: block; }
+#main .record-steps small { color: var(--voyage-muted); }
+#main .record-steps .ui-icon { width: 24px; height: 24px; color: var(--voyage-gold); }
+#main .voyage-menu .practice-records { margin-block: 20px; }
+#main .voyage-menu .practice-records > summary { padding-block: 10px; border-top: 1px solid var(--voyage-line); }
+.voyage-dialog { border-color: var(--folio-rule); border-radius: var(--voyage-radius); background: #112833; }
+.voyage-dialog[open] { animation: voyage-dialog-in 200ms var(--folio-enter) both; }
+@keyframes voyage-dialog-in { from { transform: translateY(5px) scale(.985); opacity: .65; } }
+
+:root[data-menu-motion=adventure] { view-transition-name: none; }
+:root[data-menu-motion=adventure] #main { view-transition-name: voyage-main; }
+:root[data-menu-motion=adventure] .screen-enter { animation: none !important; }
+:root[data-menu-motion=adventure] #main .screen-enter :is(.chapter-emblem,.lesson-progress > .current,.course-visual,.course-task) { animation: none; }
+:root[data-menu-motion=adventure][data-adventure-stage=place] [data-stage-emblem=place],
+:root[data-menu-motion=adventure][data-adventure-stage=sea] [data-stage-emblem=sea],
+:root[data-menu-motion=adventure][data-adventure-stage=daily] [data-stage-emblem=daily],
+:root[data-menu-motion=adventure][data-adventure-stage=legacy] [data-stage-emblem=legacy],
+:root[data-menu-motion=adventure][data-adventure-stage=source] [data-stage-emblem=source] { view-transition-name: voyage-emblem; }
+::view-transition { pointer-events: none; }
+::view-transition-group(voyage-main), ::view-transition-group(voyage-emblem) { animation-duration: var(--voyage-time); animation-timing-function: var(--folio-enter); }
+::view-transition-old(voyage-main) { animation: voyage-depart 110ms ease both; }
+::view-transition-new(voyage-main) { animation: voyage-arrive var(--voyage-time) var(--folio-enter) both; }
+::view-transition-image-pair(voyage-main) { isolation: auto; }
+@keyframes voyage-depart { to { opacity: 0; transform: translateY(-4px); } }
+@keyframes voyage-arrive { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+body.contrast[data-view] { background: #06151d; --voyage-line: #dce6eb; --voyage-muted: #fff; }
+body.contrast #main :is(.course-task,.lesson-evidence,.menu-panel,.menu-cover,.record,.response-story) { background: #06151d; border-color: white; }
+body.contrast #main .voyage-menu .book-cover { background: #06151d; }
+body.contrast #main .course-activity .activity-heading { background: transparent; }
+body.contrast #main .course-activity .choice { border-color: #d5e4e5; }
+body.contrast #main .course-activity .choice[data-answer-state=correct] .answer-number { background: #a7d8bf; color: #0b251e; }
+body.large #main :is(.course-activity .course-layout,.voyage-menu .menu-split) { grid-template-columns: minmax(0, 1fr); }
+@media (max-width: 840px) {
+  #main .course-activity .course-layout, #main .voyage-menu .menu-split { grid-template-columns: minmax(0, 1fr); }
+  #main .activity-heading .lesson-progress { margin-left: 0; }
+}
+@media (max-width: 520px) {
+  .topbar nav button[data-nav] { padding-inline: 5px; }
+  .topbar nav button[data-nav] .ui-icon { width: 18px; height: 18px; }
+  #main .folio-course .curriculum-route button { grid-template-columns: auto minmax(0, 1fr); }
+  #main .folio-course .curriculum-route .folio-route-status { grid-column: 2; justify-content: start; }
+  #main .activity-heading .chapter-emblem { display: none; }
+  #main .course-activity .activity-heading h1 { padding-right: 0; }
+  #main .voyage-menu .book-cover { background-position: 68% center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
+@media print {
+  #main .voyage-menu .menu-cover { background: none; min-height: 0; color: black; }
+  #main .practice-records::details-content { content-visibility: visible; }
+}

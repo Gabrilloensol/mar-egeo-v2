@@ -1,5 +1,12 @@
 // A small original line-icon family. Words remain alongside every instructional icon.
 const paths = {
+  audio: '<path d="M5 13h5l7-6v18l-7-6H5zM22 12a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/>',
+  lock: '<rect x="7" y="14" width="18" height="13" rx="2"/><path d="M11 14v-4a5 5 0 0 1 10 0v4m-5 5v3"/>',
+  type: '<path d="m4 25 8-18 8 18M7 19h10m4 6 4-10 4 10m-7-3h6"/>',
+  motion: '<path d="M4 10h11M7 16h12M4 22h11m7-12 6 6-6 6"/>',
+  vote: '<path d="M10 17V9a2 2 0 0 1 4 0v5-8a2 2 0 0 1 4 0v8-6a2 2 0 0 1 4 0v7-3a2 2 0 0 1 4 0v7c0 6-3 9-9 9-4 0-6-2-8-5l-4-5a2.3 2.3 0 0 1 3-3l4 4"/>',
+  weave: '<path d="M5 5h22v22H5zM10 5v22M16 5v22M22 5v22M5 10h22M5 16h22M5 22h22"/>',
+  theatre: '<path d="M5 6c8 5 14 5 22 0v9c0 7-5 12-11 14C10 27 5 22 5 15zM9 13l4 1m6 0 4-1M11 19q5 8 10 0"/>',
   wheat: '<path d="M16 29V5M16 13C7 11 7 5 8 4c7 1 8 6 8 9ZM16 20c-8-1-9-6-8-8 6 1 8 5 8 8ZM16 13c9-2 9-8 8-9-7 1-8 6-8 9ZM16 20c8-1 9-6 8-8-6 1-8 5-8 8Z"/>',
   water: '<path d="M16 3C13 8 6 15 6 21a10 10 0 0 0 20 0C26 15 19 8 16 3Z"/><path d="M11 21a5 5 0 0 0 5 5"/>',
   amphora: '<path d="M12 3h8M13 3v7c-5 4-6 9-4 14 2 5 12 5 14 0 2-5 1-10-4-14V3M9 13C1 8 2 23 9 22M23 13c8-5 7 10 0 9M12 18h8M12 29h8"/>',

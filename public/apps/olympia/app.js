@@ -1,5 +1,5 @@
 import {createVoice} from '../../premium/adventure-voice.js';
-import {uiIcon} from '../../premium/ui-icons.js';
+import {uiIcon} from '../../premium/ui-icons.js?v=voyage23';
 import {activeProfile, readPreferences} from '../../premium/shared-preferences.js';
 
 const assets = '../../premium/assets/curriculum/';
@@ -60,18 +60,26 @@ function renderRail() {
   rail.innerHTML = stops.map((stop, index) => `<button type="button" data-stop="${index}" aria-current="${index === current ? 'step' : 'false'}">${uiIcon(stop.icon)}<span>${stop.label}</span>${answers.get(index) === stop.correct ? '<span class="stop-check" aria-label="Respuesta encontrada">✓</span>' : ''}</button>`).join('');
 }
 
-function showAnswer(index) {
+function showAnswer(index, animate = false) {
   const stop = stops[current];
   const feedback = byId('olympia-feedback');
   const correct = index === stop.correct;
   feedback.dataset.result = correct ? 'correct' : 'retry';
-  feedback.textContent = `${correct ? '¡Lo encontraste! ' : ''}${stop.replies[index]}`;
+  feedback.innerHTML = `${uiIcon(correct ? 'check' : 'eye')}<span></span>`;
+  feedback.lastElementChild.textContent = `${correct ? '¡Lo encontraste! ' : ''}${stop.replies[index]}`;
   panel.querySelector('[data-read-feedback]').hidden = false;
   panel.querySelectorAll('[data-answer]').forEach(button => {
     const selected = Number(button.dataset.answer) === index;
     button.setAttribute('aria-pressed', String(selected));
     button.dataset.result = selected ? feedback.dataset.result : '';
+    button.firstElementChild.innerHTML = selected ? uiIcon(correct ? 'check' : 'eye') : String(Number(button.dataset.answer) + 1);
+    if (selected) button.parentElement.append(feedback);
   });
+  if (animate && !preferences.reduced && !media.matches) {
+    animation?.cancel();
+    animation = feedback.animate?.([{clipPath:'inset(0 0 95% 0)', opacity:.65}, {clipPath:'inset(0)', opacity:1}], {duration:230, easing:'cubic-bezier(.18,.79,.29,1)'});
+  }
+  if (animate) byId('olympia-live').textContent = feedback.textContent;
 }
 
 function showStop(index, focus = true) {
@@ -92,8 +100,8 @@ function showStop(index, focus = true) {
     <p>${stop.intro}</p>
     <h3 id="olympia-question">${stop.question}</h3>
     <div class="olympia-audio"><button type="button" class="olympia-button" data-read>${uiIcon('audio')}Escuchar</button><button id="olympia-stop-audio" class="olympia-button" type="button" data-stop-audio hidden>Detener lectura</button></div>
-    <div class="olympia-choices" role="group" aria-labelledby="olympia-question">${stop.options.map((option, choice) => `<button type="button" data-answer="${choice}" aria-pressed="false">${option}</button>`).join('')}</div>
-    <p id="olympia-feedback" role="status"></p>
+    <div class="olympia-choices" role="group" aria-labelledby="olympia-question">${stop.options.map((option, choice) => `<div><button type="button" data-answer="${choice}" aria-pressed="false"><span class="olympia-answer-mark" aria-hidden="true">${choice+1}</span><span>${option}</span></button></div>`).join('')}</div>
+    <p id="olympia-feedback"></p>
     <button type="button" class="olympia-button feedback-audio" data-read-feedback hidden>${uiIcon('audio')}Escuchar explicación</button>
     <button type="button" class="olympia-button primary" data-next>${index === stops.length - 1 ? 'Ver mi descubrimiento' : 'Siguiente parada'} →</button>
   </div>`;
@@ -119,7 +127,7 @@ panel.addEventListener('click', event => {
   if (button.hasAttribute('data-answer')) {
     const index = Number(button.dataset.answer);
     answers.set(current, index);
-    showAnswer(index);
+    showAnswer(index, true);
     renderRail();
   } else if (button.hasAttribute('data-read')) {
     voice.speak([stop.intro, stop.question, ...stop.options.map((option, index) => `Opción ${index + 1}: ${option}.`)].join(' '));

@@ -4,8 +4,8 @@ import {setupAdventureReturn} from './adventure-return.js';
 import {gods,sites,sources,learningGuides,sitePresentation} from './content.js?v=explore14';
 import {load,save,answer} from './state.js?v=explore14';
 import {icon} from './icons.js';
-import {uiIcon,decorateUiIcons} from './ui-icons.js';
-import {setupJournal} from './journal.js?v=explore14';
+import {uiIcon,decorateUiIcons} from './ui-icons.js?v=voyage23';
+import {setupJournal} from './journal.js?v=voyage23';
 import {setupGodGallery} from './god-gallery.js';
 const $=id=>document.getElementById(id);
 decorateUiIcons();
@@ -160,15 +160,24 @@ function openSite(id, focus = true) {
 
   const feedback = $('feedback');
   const savedChoice = state.answerRevisions?.[id] === 2 ? state.answers[id] : undefined;
-  feedback.textContent = site.responses[savedChoice] || (state.visited.includes(id) ? 'Ya guardaste un hallazgo en este lugar.' : '');
-  feedback.dataset.result = savedChoice === undefined ? '' : savedChoice === site.correct ? 'correct' : 'wrong';
+  const setFeedback = (text, result) => {
+    feedback.dataset.result = result;
+    feedback.innerHTML = text && result ? `${uiIcon(result === 'correct' ? 'check' : 'eye')}<span></span>` : '';
+    if (feedback.lastElementChild) feedback.lastElementChild.textContent = text;
+    else feedback.textContent = text;
+  };
+  setFeedback(site.responses[savedChoice] || (state.visited.includes(id) ? 'Ya guardaste un hallazgo en este lugar.' : ''), savedChoice === undefined ? '' : savedChoice === site.correct ? 'correct' : 'wrong');
   const answers = $('answers');
   answers.replaceChildren();
   site.options.forEach((text, index) => {
     const button = document.createElement('button');
-    button.textContent = text;
+    button.innerHTML = `<span class="answer-index" aria-hidden="true">${index + 1}</span><span></span>`;
+    button.lastElementChild.textContent = text;
     button.setAttribute('aria-pressed', String(index === savedChoice));
-    if (index === savedChoice) button.dataset.result = feedback.dataset.result;
+    if (index === savedChoice) {
+      button.dataset.result = feedback.dataset.result;
+      button.firstElementChild.innerHTML = uiIcon(index === site.correct ? 'check' : 'eye');
+    }
     button.onclick = () => {
       const correct = index === site.correct;
       state = answer(state, id, index, site.correct);
@@ -176,9 +185,9 @@ function openSite(id, focus = true) {
       [...answers.children].forEach((option, i) => {
         option.dataset.result = i === index ? correct ? 'correct' : 'wrong' : '';
         option.setAttribute('aria-pressed', String(i === index));
+        option.firstElementChild.innerHTML = i === index ? uiIcon(correct ? 'check' : 'eye') : String(i + 1);
       });
-      feedback.dataset.result = correct ? 'correct' : 'wrong';
-      feedback.textContent = site.responses[index];
+      setFeedback(site.responses[index], correct ? 'correct' : 'wrong');
       menuMotion.response(feedback, correct);
       updateProgress();
     };
