@@ -1,5 +1,5 @@
-import {units,courseMap,courseLesson,courseRecord,courseTeacher,answerCourse} from '../../premium/curriculum.js?v=greeks25';
-import {chapters as courseChapters, chapterIndex} from '../../premium/greeks-unit.js?v=greeks25';
+import {units,courseMap,courseLesson,courseRecord,courseTeacher,answerCourse} from '../../premium/curriculum.js?v=greeks26';
+import {chapters as courseChapters, chapterIndex} from '../../premium/greeks-unit.js?v=greeks26';
 import {createPresentation} from '../../premium/adventure-presentation.js';
 import {createMenuMotion} from '../../premium/menu-motion.js';
 import {createVoice} from '../../premium/adventure-voice.js';
@@ -325,7 +325,7 @@ document.addEventListener('click',e=>{
   }
   return;
  }
- const jump=e.target.closest('[data-course-jump],.unit-cover a[href^="#"]');
+ const jump=e.target.closest('[data-course-jump],[data-unit-anchor]');
  if(jump){
   const anchor=jump.hash.slice(1);
   const target=document.getElementById(anchor);

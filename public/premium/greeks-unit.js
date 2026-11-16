@@ -5,6 +5,7 @@ export const chapters = {
     title: 'Grecia antigua: lugar y tiempo',
     summary: 'Ubica Grecia y distingue la Antigüedad del presente.',
     image: 'premium/assets/curriculum/parthenon-2008.jpg',
+    imageSize: [960, 704],
     alt: 'Columnas del Partenón, en la Acrópolis de Atenas.',
     caption: 'El Partenón de Atenas · Fotografía de 2008 · Kallistos / Neokortex, CC BY 3.0',
     ideas: [
@@ -81,6 +82,7 @@ export const chapters = {
     title: 'Investigar el pasado',
     summary: 'Distingue lo que ves y lo que puedes averiguar con una fuente.',
     image: 'premium/assets/sources/met-amphora-248662.jpg',
+    imageSize: [600, 600],
     alt: 'Vasija con dos asas y figuras oscuras sobre un fondo anaranjado.',
     caption: 'Ánfora griega · The Met, 12.198.4 · Dominio público',
     ideas: [

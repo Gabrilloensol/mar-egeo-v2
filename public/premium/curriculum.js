@@ -1,5 +1,5 @@
-import {folioCourseMap} from './folio-route.js?v=greeks25';
-import {chapters} from './greeks-unit.js?v=greeks25';
+import {folioCourseMap,renderChapterIllustration} from './folio-route.js?v=greeks26';
+import {chapters} from './greeks-unit.js?v=greeks26';
 import {activities} from './course-activities.js?v=museum22';
 import {renderCourseActivity} from './course-activity-view.js?v=greeks25';
 // Activities are evidence opportunities, never an automatic grade.
@@ -68,7 +68,10 @@ function courseEnd(c,{icon,asset,esc}) {
  const u=units[c.unit];
  if(u.id!=='source')return `<section class="book-page course-end course-explanation" data-course-theme="${u.id}">
   <header><p class="eyebrow">EXPLICA CON TUS PALABRAS</p><h1>${u.title}</h1></header>
-  ${reflectionPanel(c,c.unit,esc)}
+  <div class="unit-chapter-study">
+    ${renderChapterIllustration(chapters[u.id],asset)}
+    ${reflectionPanel(c,c.unit,esc)}
+  </div>
   <div class="actions"><button class="primary" data-study-topic="${c.unit+1}">Leer el tema siguiente →</button>
   <button class="button" data-study-topic="${c.unit}">Volver a la lectura</button>
   <button class="button" data-course-unit="${c.unit}" data-course-review>Revisar mis respuestas</button></div>
