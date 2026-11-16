@@ -1,14 +1,18 @@
-import {units,courseMap,courseLesson,courseRecord,courseTeacher,answerCourse,unitOpen,unitDone} from '../../premium/curriculum.js?v=voyage23';
+import {units,courseMap,courseLesson,courseRecord,courseTeacher,answerCourse,unitOpen,unitDone} from '../../premium/curriculum.js?v=greeks24';
+import {chapters as courseChapters, chapterIndex} from '../../premium/greeks-unit.js?v=greeks24';
 import {createPresentation} from '../../premium/adventure-presentation.js';
 import {createMenuMotion} from '../../premium/menu-motion.js';
 import {createVoice} from '../../premium/adventure-voice.js';
 import {readPreferences,writePreferences,preferenceKey} from '../../premium/shared-preferences.js';
 import {cityPlaces as buildings,cityRoadPaths,deliveryStatus} from '../../premium/adventure-city.js';
-import {uiIcon as icon} from '../../premium/ui-icons.js?v=voyage23';
+import {uiIcon as icon} from '../../premium/ui-icons.js?v=greeks24';
 import {JOURNEY_KEY,chapterIds,fresh,normalizeJourney,loadJourney,saveJourney,isUnlocked,maxStep,readyToFinish,finish,voyageOutcome,completedVoyage,exportJourney,parseJourneyBackup,restoreJourney} from '../../premium/adventure-state.js';
 import {discoveryCards} from '../../premium/adventure-records.js';
 const $=id=>document.getElementById(id),ROOT=new URL('../../',import.meta.url).href;
 const asset=p=>ROOT+p;
+const query=new URLSearchParams(location.search);
+let menuChapter=chapterIndex(units,location.hash);
+let readingChapter=null;
 const present=createPresentation(document);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let storage;try{storage=window.localStorage;}catch{storage=null;}
@@ -48,11 +52,14 @@ function persist(){if(state.view==='play'&&state.step<4&&Object.hasOwn(state.rep
 function prefs(){document.documentElement.style.fontSize=state.prefs.large?'20px':'';document.body.classList.toggle('reduced',state.prefs.reduced);document.body.classList.toggle('contrast',state.prefs.contrast);document.body.classList.toggle('large',state.prefs.large);}
 function announce(text){$('live').textContent=text;}
 const voice=createVoice({synthesis:window.speechSynthesis,Utterance:window.SpeechSynthesisUtterance,
- onChange:active=>{if($('voice-stop'))$('voice-stop').hidden=!active;},
+ onChange:active=>{
+  if($('voice-stop'))$('voice-stop').hidden=!active;
+  if(readingChapter)readingChapter.querySelector('[data-unit-stop]').hidden=!active;
+ },
  onUnavailable:()=>announce('La voz no está disponible. Puedes leer la misma instrucción.'),
  onError:()=>announce('No se pudo escuchar. La pregunta sigue disponible en pantalla.')});
 function speak(text){voice.speak(text);}
-function stopVoice(){voice.stop();}
+function stopVoice(){voice.stop();readingChapter=null;}
 function navigate(view){stopVoice();message='';state.view=view;persist();render();}
 function resume(){const retry=chapterIds.find(id=>Object.hasOwn(state.replays,id));if(retry)return retry;const next=chapterIds.find(id=>!state.completed.includes(id)&&!state.legacy.includes(id));if(state.view==='play'&&isUnlocked(state,state.chapter)&&!state.completed.includes(state.chapter))return state.chapter;return next||'sea';}
 function start(id){if(!isUnlocked(state,id)){announce('Primero completa la aventura anterior.');return;}const same=state.chapter===id;state.chapter=id;state.step=Object.hasOwn(state.replays,id)?Math.min(state.replays[id],maxStep(state)):state.completed.includes(id)?4:same?Math.min(state.step,maxStep(state)):0;state.view='play';message='';persist();render();}
@@ -78,9 +85,9 @@ function renderScreen(){
  if(!sameScreen)stopVoice();
  const openHints=sameScreen?[...document.querySelectorAll('[data-help][open], [data-course-hint][open], [data-menu-details][open]')].map(d=>d.dataset.help||d.dataset.courseHint||d.dataset.menuDetails):[];
  const section=['book','settings'].includes(state.view)?state.view:'map';
- prefs();for(const b of document.querySelectorAll('[data-nav]')){const v=b.dataset.nav;b.setAttribute('aria-current',section===v?(state.view===v?'page':'location'):'false');if(!b.querySelector('svg'))b.innerHTML=icon(v==='map'?'map':v==='book'?'book':'settings')+(v==='map'?'Mapa':v==='book'?'Cuaderno':'Opciones');}
+ prefs();for(const b of document.querySelectorAll('[data-nav]')){const v=b.dataset.nav;b.setAttribute('aria-current',section===v?(state.view===v?'page':'location'):'false');if(!b.querySelector('svg'))b.insertAdjacentHTML('afterbegin',icon(v==='map'?'book':v==='book'?'note':'settings'));}
  const courseTools={icon,asset,esc};
- $('main').innerHTML=state.view==='map'?courseMap(state.curriculum,courseTools):state.view==='course'?courseLesson(state.curriculum,courseTools):state.view==='practice'?map():state.view==='play'?lesson():state.view==='book'?book():state.view==='teacher'?teacher():settings();
+ $('main').innerHTML=state.view==='map'?courseMap(state.curriculum,courseTools,menuChapter):state.view==='course'?courseLesson(state.curriculum,courseTools):state.view==='practice'?map():state.view==='play'?lesson():state.view==='book'?book():state.view==='teacher'?teacher():settings();
  if(!sameScreen)$('main').firstElementChild?.classList.add('screen-enter');
  if(sameScreen){
   for(const details of document.querySelectorAll('[data-help], [data-course-hint], [data-menu-details]'))details.open=openHints.includes(details.dataset.help||details.dataset.courseHint||details.dataset.menuDetails);
@@ -161,7 +168,7 @@ function renderScene(state){
 }
 function closing(){if(state.completed.length!==3)return '';const e=state.extensions;return `<article class="record journey-finale"><div class="record-header">${icon('check')}<div><p class="eyebrow">TRES DESCUBRIMIENTOS</p><h2>¡Completaste tu aventura!</h2></div></div><p>El mar une puertos. Los caminos llevan alimentos a las casas. Las pistas nos ayudan a estudiar el pasado.</p><details class="help"><summary>¿Qué se parece a nuestra vida?</summary><p>Compara el barco de vela del juego con un camión que lleva alimentos hoy.</p><p><strong>Una semejanza</strong></p><div class="choices">${choice('extension:similarity:food','Ambos llevan alimentos','','amphora',e.similarity==='food')}${choice('extension:similarity:same','Ambos tienen el mismo motor','','sail',e.similarity==='same')}</div>${e.similarity?`<p role="status">${e.similarity==='food'?'Sí: ayudan a que los alimentos lleguen a otras personas.':'Mira cómo se mueve cada uno: el barco del juego usa una vela.'}</p>`:''}<p><strong>Una diferencia</strong></p><div class="choices">${choice('extension:difference:motor','El camión usa un motor','','compass',e.difference==='motor')}${choice('extension:difference:identical','Se mueven de la misma forma','','sail',e.difference==='identical')}</div>${e.difference?`<p role="status">${e.difference==='motor'?'El camión usa un motor y el barco del juego aprovecha el viento. Hoy también existen barcos de vela.':'Piensa en la vela y en el motor. Cumplen una función parecida de maneras diferentes.'}</p>`:''}</details></article>`;}
 function museumSource(){const selected=state.extensions.source;return `<article class="record museum-record"><div class="record-header">${icon('clue')}<div><p class="eyebrow">UN OBJETO DEL PASADO</p><h2>Ahora, una pieza de museo</h2></div></div><div class="museum-layout"><figure><img src="${asset('premium/assets/sources/met-amphora-248662.jpg')}" alt="Fotografía de un ánfora antigua: dos asas, cerámica negra y figuras pintadas en naranja" width="600" height="600" loading="lazy"><figcaption>Foto de un objeto conservado · The Met · 12.198.4</figcaption></figure><div><p>Esta ánfora existe. Fue hecha en la antigua Grecia hace más de 2.500 años.</p><p><strong>¿Qué es diferente de nuestros dibujos?</strong></p><div class="choices">${choice('extension:source:object','Podemos estudiar el objeto conservado','','eye',selected==='object')}${choice('extension:source:drawing','La foto prueba el viaje del juego','','sail',selected==='drawing')}</div>${selected?`<p class="feedback" role="status">${selected==='object'?'Sí. Sus asas, material y pinturas son pistas. La foto no demuestra que participara en nuestro viaje imaginado.':'Nuestro viaje fue inventado para aprender. Esta pieza es real, pero no prueba que ese viaje ocurriera.'}</p>`:''}<details><summary>Conocer su procedencia</summary><p>Ánfora de terracota, Grecia, Ática, hacia 530–520 a. C. Atribuida al Grupo de Bateman. The Metropolitan Museum of Art; Rogers Fund, 1912. Imagen de dominio público.</p><a href="https://www.metmuseum.org/art/collection/search/248662" target="_blank" rel="noopener">Ficha del museo ↗</a></details></div></div></article>`;}
-function book(){let sanctuary={};if(profile==='main')try{sanctuary=JSON.parse(storage?.getItem('odisea.sanctuary.v1')||'{}')||{};}catch{}return `<section class="book-page voyage-menu voyage-book"><header class="menu-cover book-cover"><div><p class="eyebrow">TU CUADERNO DE DESCUBRIMIENTOS</p><h1>Mis hallazgos</h1><p>Vuelve a tus ideas y a las pistas que te ayudaron.</p></div></header>${courseRecord(state.curriculum,{esc,icon})}<details class="help practice-records" data-menu-details="practice-records"><summary>Misiones de práctica y santuario</summary>${closing()}${chapterIds.map(id=>{const c=chapters[id],done=state.completed.includes(id);return `<article class="record"><div class="record-header"><img src="${chapterImage(id)}" alt=""><div><p class="eyebrow">${done?'DESCUBRIMIENTO GUARDADO':state.legacy.includes(id)?'COMPLETADO EN LA VERSIÓN ANTERIOR':'POR DESCUBRIR'}</p><h2>${done?c.reward:c.title}</h2></div></div><p>${done?state.records?.[id]?'Así terminaste este reto:':c.learning:state.legacy.includes(id)?'Se conserva el registro anterior, sin atribuirle nuevos aprendizajes.':c.question}</p>${done?decisionTrail(id):''}${done&&state.records?.[id]?`<details class="record-learning"><summary>La idea que descubrí</summary><p>${c.learning}</p></details>`:''}<details class="record-writing"><summary>Mi explicación o pregunta</summary><label for="note-${id}">Puedes escribir o explicarlo a tu docente.</label><textarea id="note-${id}" data-note="${id}" maxlength="600" placeholder="Me di cuenta de que…">${esc(state.notes[id]||'')}</textarea></details><p class="print-note" data-print-note="${id}">${esc(state.notes[id]||'')}</p><div class="record-actions">${button(done?'Volver a este descubrimiento':'Continuar este reto',`${done?'discovery':'chapter'}:${id}`,!isUnlocked(state,id),'button')}</div></article>`;}).join('')}${state.completed.includes('clues')?museumSource():''}${profile==='main'?`<article class="record"><div class="record-header">${icon('gallery')}<div><p class="eyebrow">EXPLORACIÓN LIBRE · REGISTRO ANTERIOR</p><h2>El santuario y los dioses</h2></div></div><p>${Array.isArray(sanctuary.visited)?sanctuary.visited.length:0} lugares con pregunta resuelta · ${Array.isArray(sanctuary.learned)?sanctuary.learned.length:0} fichas marcadas como leídas · ${Array.isArray(sanctuary.observed)?sanctuary.observed.length:0} esculturas marcadas como observadas.</p><p class="footer-note">Leer y observar son parte del viaje. Estos contadores no califican tu comprensión.</p><p><a href="${ROOT}?cuaderno=1&amp;volver=aventura">Abrir notas y repasos del santuario →</a></p></article>`:''}</details><div class="actions menu-actions">${button('Guardar copia de la aventura','export',false,'button')}${button('Imprimir cuaderno','print',false,'button')}${button('Volver al mapa','map')}</div></section>`;}
+function book(){let sanctuary={};if(profile==='main')try{sanctuary=JSON.parse(storage?.getItem('odisea.sanctuary.v1')||'{}')||{};}catch{}return `<section class="book-page voyage-menu voyage-book"><header class="menu-cover book-cover"><div><p class="eyebrow">TU CUADERNO DE DESCUBRIMIENTOS</p><h1>Mis hallazgos</h1><p>Vuelve a tus ideas y a las pistas que te ayudaron.</p></div></header>${courseRecord(state.curriculum,{esc,icon})}<details class="help practice-records" data-menu-details="practice-records"><summary>Misiones de práctica y santuario</summary>${closing()}${chapterIds.map(id=>{const c=chapters[id],done=state.completed.includes(id);return `<article class="record"><div class="record-header"><img src="${chapterImage(id)}" alt=""><div><p class="eyebrow">${done?'DESCUBRIMIENTO GUARDADO':state.legacy.includes(id)?'COMPLETADO EN LA VERSIÓN ANTERIOR':'POR DESCUBRIR'}</p><h2>${done?c.reward:c.title}</h2></div></div><p>${done?state.records?.[id]?'Así terminaste este reto:':c.learning:state.legacy.includes(id)?'Se conserva el registro anterior, sin atribuirle nuevos aprendizajes.':c.question}</p>${done?decisionTrail(id):''}${done&&state.records?.[id]?`<details class="record-learning"><summary>La idea que descubrí</summary><p>${c.learning}</p></details>`:''}<details class="record-writing"><summary>Mi explicación o pregunta</summary><label for="note-${id}">Puedes escribir o explicarlo a tu docente.</label><textarea id="note-${id}" data-note="${id}" maxlength="600" placeholder="Me di cuenta de que…">${esc(state.notes[id]||'')}</textarea></details><p class="print-note" data-print-note="${id}">${esc(state.notes[id]||'')}</p><div class="record-actions">${button(done?'Volver a este descubrimiento':'Continuar este reto',`${done?'discovery':'chapter'}:${id}`,!isUnlocked(state,id),'button')}</div></article>`;}).join('')}${state.completed.includes('clues')?museumSource():''}${profile==='main'?`<article class="record"><div class="record-header">${icon('gallery')}<div><p class="eyebrow">EXPLORACIÓN LIBRE · REGISTRO ANTERIOR</p><h2>El santuario y los dioses</h2></div></div><p>${Array.isArray(sanctuary.visited)?sanctuary.visited.length:0} lugares con pregunta resuelta · ${Array.isArray(sanctuary.learned)?sanctuary.learned.length:0} fichas marcadas como leídas · ${Array.isArray(sanctuary.observed)?sanctuary.observed.length:0} esculturas marcadas como observadas.</p><p class="footer-note">Leer y observar son parte del viaje. Estos contadores no califican tu comprensión.</p><p><a href="${ROOT}?cuaderno=1&amp;volver=aventura">Abrir notas y repasos del santuario →</a></p></article>`:''}</details><div class="actions menu-actions">${button('Guardar copia de la aventura','export',false,'button')}${button('Imprimir cuaderno','print',false,'button')}${button('Volver a la unidad','map')}</div></section>`;}
 function settings() {
  const controls=[['reduced','motion','Reducir movimiento'],['contrast','eye','Alto contraste'],['large','type','Texto grande'],['audio','audio','Escuchar las preguntas']];
  return `<section class="options-page voyage-menu">
@@ -177,11 +184,11 @@ function settings() {
     <details class="help" data-menu-details="recovery"><summary>Más opciones de recuperación</summary><p>La copia incluye el avance, las notas y los ajustes de tu símbolo. El santuario tiene su propio cuaderno.</p>${button('Recuperar partida anterior','recover',false,'button')}</details>
    </section>
   </div>
-  <div class="actions menu-actions">${button('Guía docente','teacher',false,'button')}${button('Volver al mapa','map')}</div>
+  <div class="actions menu-actions">${button('Guía docente','teacher',false,'button')}${button('Volver a la unidad','map')}</div>
  </section>`;
 }
 
-function teacher(){return `<section class="book-page voyage-menu"><header class="menu-cover"><div><p class="eyebrow">HISTORIA · 3.º BÁSICO</p><h1>Guía para docentes</h1></div></header>${courseTeacher(state.curriculum,{esc})}<h2>Misiones anteriores de práctica</h2><p>Grecia antigua se trabaja explícitamente en 3.º básico (HI03 OA 01). En 4.º, este recorrido consolida habilidades de observación, relación y comunicación. No sustituye las unidades de civilizaciones americanas.</p><table><thead><tr><th>Reto</th><th>Evidencia observable</th><th>Registro local</th></tr></thead><tbody>${chapterIds.map(id=>`<tr><td>${chapters[id].title}</td><td>${id==='sea'?'Relaciona la ruta elegida con puertos o adaptación de la vela.':id==='city'?'Conecta producción y viviendas y reconoce para qué sirven los caminos.':'Relaciona dos detalles de ilustraciones y distingue lo observado de lo que no sabemos.'}</td><td>${state.completed.includes(id)?'Opciones relacionadas':state.legacy.includes(id)?'Finalizado en versión anterior':'Pendiente'}</td></tr>`).join('')}</tbody></table><h2>Una pregunta fuera de la pantalla</h2><p>¿Cómo llegan hoy los alimentos a nuestras casas? Pide una semejanza y una diferencia con el recorrido. Esta comparación puede trabajar HI04 OAH c; elegir una carga por sí solo no demuestra esa habilidad.</p><h2>Sobre las fuentes</h2><p>El laboratorio inicial utiliza ilustraciones identificadas para practicar preguntas y límites. Para trabajar información histórica, complétalo con fuentes auténticas seleccionadas por el docente. Los modelos de la galería incluyen vaciados, reconstrucciones comparativas modernas y una pieza texturizada con atribución.</p><p>No se evalúa automáticamente el significado de las notas. «Opciones relacionadas» registra la tarea estructurada; no equivale a dominio global ni a una calificación.</p><details class="help"><summary>Actividades ampliadas y archivos anteriores</summary><p>Conservan sus partidas y ofrecen más complejidad. Acompañar su lectura y revisar las explicaciones con el estudiante.</p><div class="actions"><a class="button" href="${asset('apps/aa-egeo-voyage/classic.html')}">Travesía ampliada</a><a class="button" href="${asset('apps/aa-polis-city/classic.html')}">Construcción libre</a><a class="button" href="${asset('apps/aa-sources-lab/classic.html')}">Tablero de fuentes</a></div></details><p><a href="https://www.curriculumnacional.cl/curriculum/1o-6o-basico/historia-geografia-ciencias-sociales/3-basico/hi03-oa-01" target="_blank" rel="noopener">MINEDUC · Grecia en 3.º básico ↗</a></p><div class="actions">${button('Imprimir','print',false,'button')}${button('Cuaderno de esta partida','book',false,'button')}${button('Volver al mapa','map')}</div></section>`;}
+function teacher(){return `<section class="book-page voyage-menu"><header class="menu-cover"><div><p class="eyebrow">HISTORIA · 3.º BÁSICO</p><h1>Guía para docentes</h1></div></header>${courseTeacher(state.curriculum,{esc})}<h2>Misiones anteriores de práctica</h2><p>Grecia antigua se trabaja explícitamente en 3.º básico (HI03 OA 01). En 4.º, este recorrido consolida habilidades de observación, relación y comunicación. No sustituye las unidades de civilizaciones americanas.</p><table><thead><tr><th>Reto</th><th>Evidencia observable</th><th>Registro local</th></tr></thead><tbody>${chapterIds.map(id=>`<tr><td>${chapters[id].title}</td><td>${id==='sea'?'Relaciona la ruta elegida con puertos o adaptación de la vela.':id==='city'?'Conecta producción y viviendas y reconoce para qué sirven los caminos.':'Relaciona dos detalles de ilustraciones y distingue lo observado de lo que no sabemos.'}</td><td>${state.completed.includes(id)?'Opciones relacionadas':state.legacy.includes(id)?'Finalizado en versión anterior':'Pendiente'}</td></tr>`).join('')}</tbody></table><h2>Una pregunta fuera de la pantalla</h2><p>¿Cómo llegan hoy los alimentos a nuestras casas? Pide una semejanza y una diferencia con el recorrido. Esta comparación puede trabajar HI04 OAH c; elegir una carga por sí solo no demuestra esa habilidad.</p><h2>Sobre las fuentes</h2><p>El laboratorio inicial utiliza ilustraciones identificadas para practicar preguntas y límites. Para trabajar información histórica, complétalo con fuentes auténticas seleccionadas por el docente. Los modelos de la galería incluyen vaciados, reconstrucciones comparativas modernas y una pieza texturizada con atribución.</p><p>No se evalúa automáticamente el significado de las notas. «Opciones relacionadas» registra la tarea estructurada; no equivale a dominio global ni a una calificación.</p><details class="help"><summary>Actividades ampliadas y archivos anteriores</summary><p>Conservan sus partidas y ofrecen más complejidad. Acompañar su lectura y revisar las explicaciones con el estudiante.</p><div class="actions"><a class="button" href="${asset('apps/aa-egeo-voyage/classic.html')}">Travesía ampliada</a><a class="button" href="${asset('apps/aa-polis-city/classic.html')}">Construcción libre</a><a class="button" href="${asset('apps/aa-sources-lab/classic.html')}">Tablero de fuentes</a></div></details><p><a href="https://www.curriculumnacional.cl/curriculum/1o-6o-basico/historia-geografia-ciencias-sociales/3-basico/hi03-oa-01" target="_blank" rel="noopener">MINEDUC · Grecia en 3.º básico ↗</a></p><div class="actions">${button('Imprimir','print',false,'button')}${button('Cuaderno de esta partida','book',false,'button')}${button('Volver a la unidad','map')}</div></section>`;}
 function confirmation(title,copy,action){pendingConfirm=action;$('confirm-title').textContent=title;$('confirm-copy').textContent=copy;$('confirm').showModal();$('cancel').focus();}
 $('cancel').onclick=()=>{$('confirm').close();pendingConfirm=null;};$('accept').onclick=()=>{const fn=pendingConfirm;pendingConfirm=null;$('confirm').close();fn?.();};$('confirm').addEventListener('cancel',()=>{pendingConfirm=null;});
 function choose(id){message='';const [kind,value,answer]=id.split(':');if(kind==='extension'){state.extensions[value]=answer;persist();render();return;}
@@ -239,8 +246,48 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
  }
  if(b.hasAttribute('data-course-next')){const t=units[c.unit].tasks[c.step];if(t&&c.answers[t.id]?.selected===t.correct){c.step++;courseRender();}}
  if(b.hasAttribute('data-reflection-oral')){const r=c.reflections[c.unit]||{idea:'',evidence:'',oral:false};c.reflections[c.unit]={...r,oral:!r.oral};courseRender();}
- if(b.hasAttribute('data-course-back')){if(c.step>0)c.step--;else state.view='map';courseRender();}
+ if(b.hasAttribute('data-course-back')){if(c.step>0)c.step--;else {menuChapter=c.unit;state.view='map';}courseRender();}
  if(b.hasAttribute('data-course-shared')&&units.every((_,i)=>unitDone(c,i))){c.shared=true;courseRender();}
+});
+document.addEventListener('toggle',e=>{
+ const panel=e.target;
+ if(!panel.matches?.('.unit-topic')||!panel.isConnected)return;
+ if(panel.open)menuChapter=Number(panel.dataset.chapterIndex);
+ else {
+  if(panel===readingChapter)stopVoice();
+  panel.querySelector('.unit-video-player iframe')?.remove();
+  const trigger=panel.querySelector('[data-unit-video]');
+  if(trigger)trigger.hidden=false;
+  if(menuChapter===Number(panel.dataset.chapterIndex))menuChapter=-1;
+ }
+},true);
+document.addEventListener('click',e=>{
+ const button=e.target.closest('.unit-topic button');
+ if(!button)return;
+ const panel=button.closest('.unit-topic');
+ if(button.hasAttribute('data-unit-read')){
+  stopVoice();
+  readingChapter=panel;
+  const copy=[...panel.querySelectorAll('.unit-ideas h3,.unit-ideas p')].map(node=>node.textContent);
+  speak(copy.join(' '));
+ }
+ if(button.hasAttribute('data-unit-stop')){
+  stopVoice();
+  panel.querySelector('[data-unit-read]').focus();
+ }
+ if(button.dataset.unitVideo){
+  stopVoice();
+  const unit=units[Number(panel.dataset.chapterIndex)];
+  const video=courseChapters[unit.id].video;
+  const frame=document.createElement('iframe');
+  frame.title=video.title+' · Teleclases Chile';
+  frame.src='https://www.youtube-nocookie.com/embed/'+video.id+'?cc_load_policy=1&cc_lang_pref=es&rel=0';
+  frame.allow='encrypted-media; picture-in-picture; fullscreen';
+  frame.allowFullscreen=true;
+  button.hidden=true;
+  button.parentElement.append(frame);
+  frame.focus();
+ }
 });
 const hinted=new Set();
 document.addEventListener('toggle',e=>{if(e.target.dataset?.courseHint&&e.target.open){const id=e.target.dataset.courseHint;hinted.add(id);state.curriculum.hints=[...new Set([...state.curriculum.hints,id])];if(state.curriculum.answers[id])state.curriculum.answers[id].help=true;persist();}},true);
@@ -248,7 +295,7 @@ document.addEventListener('input',e=>{if(['idea','evidence'].includes(e.target.d
 document.addEventListener('change',e=>{if(e.target.id==='course-topic'){state.curriculum.topic=e.target.value;courseRender();}if(e.target.id==='course-support'){state.curriculum.support=e.target.value;persist();}if(e.target.id==='player')hinted.clear();});
 
 if(!Object.keys(state.curriculum.answers).length&&state.view==='play')state.view='map';
-const query=new URLSearchParams(location.search),requested=query.get('chapter')||document.body.dataset.chapter;
+const requested=query.get('chapter')||document.body.dataset.chapter;
 if(query.has('teacher'))state.view='teacher';
 if(chapterIds.includes(requested)&&isUnlocked(state,requested)){
  const same=state.chapter===requested;state.chapter=requested;
@@ -256,5 +303,14 @@ if(chapterIds.includes(requested)&&isUnlocked(state,requested)){
  state.step=Object.hasOwn(state.replays,requested)?Math.min(state.replays[requested],maxStep(state)):state.completed.includes(requested)?4:same?Math.min(state.step,maxStep(state)):0;
 }else if(requested)state.view='map';
 else if(query.has('book'))state.view='book';
-else if(location.pathname.includes('aa-campaign-map'))state.view='map';
+else if(query.has('unidad')||menuChapter>=0||location.pathname.includes('aa-campaign-map'))state.view='map';
 render();
+window.addEventListener('hashchange',()=>{
+ const index=chapterIndex(units,location.hash);
+ if(index<0)return;
+ menuChapter=index;
+ if(state.view==='map'){
+  const panel=$('main').querySelector(`[data-chapter-index="${index}"]`);
+  if(panel){panel.open=true;panel.scrollIntoView({block:'start'});}
+ }else navigate('map');
+});

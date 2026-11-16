@@ -74,10 +74,10 @@ export function renderCourseActivity({unit, unitIndex, task, step, answer, icon,
     <header class="course-heading activity-heading">
       <div class="chapter-emblem" data-stage-emblem="${unit.id}" aria-hidden="true">${icon(unit.icon)}</div>
       <div class="activity-nav">
-        <button class="button" data-course-back>← Volver</button><p class="eyebrow">${unit.title}</p>
+        <button class="button" data-course-back>${step ? '← Paso anterior' : '← Temas de la unidad'}</button><p class="eyebrow">${unit.title}</p>
         <div class="lesson-progress" role="group" aria-label="Progreso de la etapa">
           ${unit.tasks.map((_, index) => `<span aria-hidden="true" class="${index <= step ? 'filled' : ''} ${index === step ? 'current' : ''}"></span>`).join('')}
-          <small>Etapa ${unitIndex + 1} de 5 · Paso ${step + 1} de ${unit.tasks.length}</small>
+          <small>Tema ${unitIndex + 1} de 5 · Paso ${step + 1} de ${unit.tasks.length}</small>
         </div>
       </div>
       <h1 id="lesson-question">${task.question}</h1>

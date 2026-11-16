@@ -1,5 +1,6 @@
 // A small original line-icon family. Words remain alongside every instructional icon.
 const paths = {
+  play: '<path d="m11 6 15 10-15 10z"/>',
   audio: '<path d="M5 13h5l7-6v18l-7-6H5zM22 12a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/>',
   lock: '<rect x="7" y="14" width="18" height="13" rx="2"/><path d="M11 14v-4a5 5 0 0 1 10 0v4m-5 5v3"/>',
   type: '<path d="m4 25 8-18 8 18M7 19h10m4 6 4-10 4 10m-7-3h6"/>',

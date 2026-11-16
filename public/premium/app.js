@@ -1,6 +1,6 @@
 import {createMenuMotion} from './menu-motion.js?v=atlas18';
 import {activeProfile,readPreferences,writePreferences,preferenceKey} from './shared-preferences.js';
-import {setupAdventureReturn} from './adventure-return.js';
+import {setupAdventureReturn} from './adventure-return.js?v=greeks24';
 import {gods,sites,sources,learningGuides,sitePresentation} from './content.js?v=explore14';
 import {load,save,answer} from './state.js?v=explore14';
 import {icon} from './icons.js';
@@ -110,7 +110,7 @@ $('home').onclick = () => {
 };
 $('dismiss-complete').onclick=()=>{celebrationDismissed=true;updateProgress();$('stations').querySelector('button')?.focus();};
 for(const id of ['nav-codex','intro-codex','complete-codex'])$(id).onclick=()=>openCodex();
-$('nav-campaign').onclick=()=>{location.href='apps/aa-campaign-map/';};
+$('nav-campaign').onclick=()=>{location.href='apps/learning-adventure/?unidad=1';};
 $('settings').onclick=()=>showDialog('preferences');
 $('reset-camera').onclick=()=>{closeSite();world?.overview();};
 $('zoom-in').onclick=()=>world?.zoom(1.2);$('zoom-out').onclick=()=>world?.zoom(1/1.2);
@@ -290,7 +290,7 @@ syncWorld();
 import {loadJourney,JOURNEY_KEY} from './adventure-state.js';
 let journeyProfile='main';try{const savedProfile=storage?.getItem('odisea.active-player');journeyProfile=['main','dolphin','owl','olive'].includes(savedProfile)?savedProfile:'main';}catch{}
 const journey=loadJourney(storage,journeyProfile==='main'?JOURNEY_KEY:JOURNEY_KEY+'.'+journeyProfile);
-if(journey.updatedAt)$('journey-start').innerHTML='Continuar mi aventura <span>→</span>';
+if(journey.updatedAt)$('journey-start').innerHTML='Ir a la unidad <span>→</span>';
 const entryQuery=new URLSearchParams(location.search);
 setupAdventureReturn(document,location.search);
 if(entryQuery.has('explorar'))explore();

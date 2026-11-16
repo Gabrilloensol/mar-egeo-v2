@@ -1,49 +1,75 @@
-// An original itinerary diagram. The relief behind it is illustrative.
-function routeDiagram(stages) {
-  const points = [[90,321],[213,251],[349,232],[433,163],[524,73]];
-  return `<svg class="folio-course-trace" viewBox="0 0 600 400" preserveAspectRatio="none" aria-hidden="true">
-    <path class="folio-trace-shadow" d="M90 321Q169 335 213 251T349 232Q427 252 433 163T524 73"/>
-    <path class="folio-trace-line" pathLength="1" d="M90 321Q169 335 213 251T349 232Q427 252 433 163T524 73"/>
-    ${stages.map(({unit,index,status}) => `<g class="folio-marker" data-marker-stage="${unit.id}" data-route-state="${status}" transform="translate(${points[index].join(' ')})"><circle r="14"/><text dy=".35em">${index+1}</text></g>`).join('')}
-  </svg>`;
+import {chapters, publicVideoSource, unitSource} from './greeks-unit.js?v=greeks24';
+
+function videoCard(video, icon) {
+  const watch = 'https://www.youtube.com/watch?v=' + video.id;
+  return `<section class="unit-video" aria-label="Video: ${video.title}">
+    <p class="unit-video-credit">Teleclases Chile · Corporación Municipal de Iquique · ${video.duration}</p>
+    <h3>${video.title}</h3>
+    <p><strong>Mientras miras.</strong> ${video.cue}</p>
+    <div class="unit-video-player"><button class="button" type="button" data-unit-video="${video.id}" aria-label="Cargar video: ${video.title}">${icon('play')} Cargar video</button></div>
+    <a class="unit-video-link" href="${watch}" target="_blank" rel="noopener">Ver en YouTube ↗</a>
+    <ul class="unit-video-moments" aria-label="Momentos para observar">${video.moments.map(([seconds, label]) =>
+      `<li><a href="${watch}&amp;t=${seconds}s" target="_blank" rel="noopener">${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')} · ${label} ↗</a></li>`).join('')}</ul>
+    <p><strong>Después de mirar.</strong> ${video.check}</p>
+  </section>`;
 }
 
-export function folioCourseMap(units, state, {icon, asset}, {unitDone, unitOpen, courseDone}) {
+function chapterPanel(chapter, {icon, asset}) {
+  return `<div class="unit-chapter-content">
+    <div class="unit-chapter-study">
+      <div class="unit-ideas">${chapter.ideas.map(([title, text]) => `<div><h3>${title}</h3><p>${text}</p></div>`).join('')}</div>
+      <figure><img src="${asset(chapter.image)}" alt="${chapter.alt}" loading="lazy" decoding="async"><figcaption>${chapter.caption}</figcaption></figure>
+    </div>
+    <p class="unit-prompt">${icon('question')}<span>${chapter.prompt}</span></p>
+    ${chapter.video ? videoCard(chapter.video, icon) : ''}
+    ${chapter.links ? `<div class="unit-topic-links">${chapter.links.map(([path, title, symbol]) => `<a href="${asset(path)}">${icon(symbol)}${title}<span aria-hidden="true">→</span></a>`).join('')}</div>` : ''}
+  </div>`;
+}
+
+export function folioCourseMap(units, state, tools, {unitDone, unitOpen, courseDone}, selectedUnit) {
+  const {icon} = tools;
   const pending = units.findIndex((_, index) => !unitDone(state, index));
   const resume = pending < 0 ? units.length - 1 : pending;
   const count = units.filter((_, index) => unitDone(state, index)).length;
-  const start = Object.keys(state.answers).length === 0;
-  const title = courseDone(state) ? 'Volver a mis hallazgos' : start ? 'Empezar mi viaje' : 'Continuar mi viaje';
-  const stages = units.map((unit, index) => {
-    const done = unitDone(state,index);
-    const available = unitOpen(state,index);
-    return {unit,index,available,status:done ? 'done' : available ? 'open' : 'later'};
-  });
-  return `<section class="book-page curriculum-home folio-course">
-    <header class="folio-course-head">
-      <div><p class="eyebrow">GRECIA ANTIGUA · 3.º BÁSICO</p><h1>Tu ruta por Grecia</h1><div class="route-completion"><progress value="${count}" max="${units.length}" aria-label="Etapas recorridas"></progress><span>${count} de ${units.length} etapas recorridas</span></div></div>
-      <button class="primary" data-course-continue="${resume}">${title} →</button>
+  const active = selectedUnit;
+  const started = Object.keys(state.answers).length > 0;
+  const title = courseDone(state) ? 'Volver a mi investigación' : started ? 'Continuar las actividades' : 'Empezar las actividades';
+  return `<section class="book-page curriculum-home folio-course greeks-unit">
+    <header class="unit-cover">
+      <div><p class="eyebrow">HISTORIA · 3.º BÁSICO · UNIDAD 2</p><h1>Los griegos</h1><p>¿Cómo vivían los antiguos griegos y qué aprendemos de ellos hoy?</p></div>
+      <div class="unit-cover-actions"><div class="route-completion"><progress value="${count}" max="${units.length}" aria-label="Temas practicados"></progress><span>${count} de ${units.length} temas practicados</span></div><button class="primary" data-course-continue="${resume}">${title} →</button></div>
     </header>
-    <div class="folio-course-layout">
-      <figure class="folio-course-chart">
-        <div class="folio-course-image"><img src="${asset('premium/assets/menu/aegean-relief.jpg')}" width="960" height="640" alt="Relieve artístico de islas rocosas sobre un mar azul oscuro" fetchpriority="high">${routeDiagram(stages)}</div>
-        <figcaption>Relieve imaginado del Egeo · ruta simbólica</figcaption>
-      </figure>
-      <ol class="curriculum-route" aria-label="Etapas de la aventura">${stages.map(({unit,index,available,status}) => {
-        const label = status==='done' ? 'Recorrida' : available ? 'Disponible' : 'Más adelante';
-        return `<li data-route="${unit.id}" data-route-state="${status}">
-          <button data-course-unit="${index}" ${available ? '' : 'disabled'}>
-            <span class="route-number" data-stage-emblem="${unit.id}" aria-hidden="true">${icon(unit.icon)}<span class="route-pin-number">${index+1}</span></span>
-            <span><strong>${unit.title}</strong><small>${unit.summary}</small></span>
-            <small class="folio-route-status">${icon(status==='done'?'check':available?'compass':'lock')}${label}</small>
-          </button>
-        </li>`;
-      }).join('')}</ol>
-    </div>
-    <div class="folio-course-links">
-      <a class="olympia-entry" href="${asset('apps/olympia/')}"><img src="${asset('premium/assets/curriculum/olympic-awards.jpg')}" alt="" width="160" height="92" loading="lazy"><span><strong>Los Juegos Olímpicos</strong><small>Visita Olimpia y compara los juegos de antes y de hoy.</small></span><span aria-hidden="true">→</span></a>
-      <details class="help"><summary>Explorar y practicar más</summary><p>Recorre las etapas en distintas sesiones y revisa tus hallazgos con tu docente.</p><div class="actions"><button class="button" data-action="practice">Misiones de práctica</button><a class="button" href="${asset('?escultura=zeus&volver=aventura')}">Galería de dioses</a></div></details>
+    <section class="unit-menu" aria-labelledby="unit-menu-title">
+      <h2 id="unit-menu-title">Temas de la unidad</h2>
+      <p class="unit-menu-intro">Abre cualquier tema para leerlo. Las actividades siguen el orden del menú.</p>
+      ${units.map((unit,index) => {
+        const chapter = chapters[unit.id];
+        const done = unitDone(state,index);
+        const available = unitOpen(state,index);
+        return `<details class="unit-topic" data-chapter-index="${index}" id="${chapter.slug}" name="temas-griegos"${index===active?' open':''}>
+          <summary><span class="route-number" data-stage-emblem="${unit.id}" aria-hidden="true">${icon(unit.icon)}<b>${index+1}</b></span>
+            <span class="unit-topic-label"><strong>${unit.title}</strong><span>${unit.summary}${chapter.video ? ' Incluye video.' : ''}</span></span>
+            <span class="unit-topic-arrow" aria-hidden="true"></span>
+          </summary>
+          ${chapterPanel(chapter,tools)}
+          <div class="unit-read-actions"><button class="button" data-unit-read>${icon('audio')} Escuchar el tema</button><button class="button" data-unit-stop hidden>Detener lectura</button></div>
+          <div class="unit-chapter-action"><button class="primary" data-course-unit="${index}" ${available?'':'disabled'}>${done?'Repasar actividades':'Hacer las actividades'} <span aria-hidden="true">→</span></button>${!available?`<p>Para abrir estas actividades, termina «${units[index-1].title}».</p>`:''}</div>
+        </details>`;
+      }).join('')}
+    </section>
+    <section class="unit-context" aria-labelledby="unit-context-title">
+      <h2 id="unit-context-title">Del mar Egeo a nuestros días</h2>
+      <ol>
+        <li><strong>Hace unos 2.800 años</strong><span>Se desarrollaron ciudades griegas con sus propias reglas.</span></li>
+        <li><strong>Hace unos 2.500 años</strong><span>En Atenas se construyó el Partenón y hubo asambleas ciudadanas.</span></li>
+        <li><strong>Hoy</strong><span>El teatro, los juegos y otras ideas griegas siguen presentes con cambios.</span></li>
+      </ol>
+    </section>
+    <footer class="unit-teacher-links">
+      <a href="${unitSource}" target="_blank" rel="noopener">Unidad oficial del Mineduc ↗</a>
+      <a href="${publicVideoSource}" target="_blank" rel="noopener">Programa educativo municipal Teleclases ↗</a>
       <button class="button" data-action="teacher">Guía docente</button>
-    </div>
+      <details><summary>Más actividades de práctica</summary><button class="button" data-action="practice">Abrir las misiones de práctica</button></details>
+    </footer>
   </section>`;
 }
