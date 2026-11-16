@@ -43,12 +43,12 @@ export const chapters = {
       ['?explorar=1&volver=creencias', 'Explorar un santuario griego', 'temple'],
       ['?escultura=zeus&volver=creencias', 'Observar los dioses en 3D', 'gallery'],
     ],
-    video: {
+    videos: [{
       id: '1osZElvXIEc', title: 'La religión de los griegos', duration: '7 min 31 s',
       moments: [[100, 'La Acrópolis y sus restos'], [175, 'Ilustraciones de los dioses']],
       cue: 'Cuando aparezcan la Acrópolis y sus templos, fíjate en lo que se conserva. Luego escucha hablar de los dioses del Olimpo.',
       check: 'Elige un dios y explica cómo lo honraban los griegos. Puedes usar el templo, una ofrenda o los juegos como ejemplo.',
-    },
+    }],
   },
   legacy: {
     slug: 'legado-griego',
@@ -60,16 +60,21 @@ export const chapters = {
     ideas: [
       ['¿Qué es un legado?', 'Es algo del pasado que otras personas reciben y pueden transformar. En los teatros griegos, el público miraba desde gradas al aire libre. Hoy también vemos actores frente a un público, incluso en salas cerradas. Las columnas de sus templos inspiraron edificios posteriores.'],
       ['Juegos que cambiaron', 'En Olimpia había pruebas como las carreras a pie. El premio era una corona de olivo. En los Juegos Olímpicos actuales también hay carreras y se entregan medallas.'],
-      ['Decidir juntos', 'En Atenas, los hombres adultos con ciudadanía podían participar en la asamblea. Las mujeres, las personas extranjeras y las esclavizadas quedaban fuera. Imagina una votación en tu curso. ¿Quién tendría voz?'],
+      ['Decidir juntos', 'Democracia viene de demos, que significa pueblo, y kratos, que significa poder. En Atenas, los hombres adultos con ciudadanía podían hablar y votar en la asamblea. Las mujeres, las personas extranjeras y las esclavizadas quedaban fuera.'],
     ],
     prompt: 'Escoge un ejemplo y completa: «Antes… Hoy… En ambos…». Puedes explicarlo hablando o dibujando.',
     links: [['apps/olympia/', 'Comparar los Juegos Olímpicos', 'olive']],
-    video: {
+    videos: [{
+      id: 'NKVtRYMWuEg', anchor: 'democracia', title: 'El nacimiento de la democracia', duration: '7 min 30 s',
+      moments: [[165, 'Qué significa democracia'], [305, 'Cómo era la asamblea'], [405, 'Una votación actual']],
+      cue: 'Observa quiénes podían participar en la asamblea de Atenas. Al final, fíjate en la urna de una votación actual.',
+      check: 'Imagina que tu curso elige un cuento para leer. ¿Cómo escucharán las ideas? ¿Quiénes podrán votar? Explica una semejanza y una diferencia con la asamblea de Atenas.',
+    }, {
       id: '5J5uJeKpdwI', title: 'Civilización griega, legado y comparación con la actualidad', duration: '7 min 9 s',
       moments: [[135, 'Templo de columnas'], [290, 'Gradas del teatro']],
       cue: 'Fíjate en el templo con columnas y en las gradas del teatro. Busca algún lugar actual que cumpla una función parecida.',
       check: 'Compara el teatro antiguo con uno actual: ¿qué hacen los actores y el público en los dos? ¿Qué cambia en el espacio?',
-    },
+    }],
   },
   source: {
     slug: 'investigar',
@@ -90,5 +95,10 @@ export const unitSource = 'https://www.curriculumnacional.cl/docente/629/w3-arti
 export const publicVideoSource = 'https://www.cormudesi.cl/Padems/PADEM%202022.pdf';
 
 export function chapterIndex(units, hash) {
-  return units.findIndex(unit => '#' + chapters[unit.id].slug === hash);
+  const anchor = hash.slice(1);
+  if (!anchor) return -1;
+  return units.findIndex(({id}) => {
+    const chapter = chapters[id];
+    return chapter.slug === anchor || chapter.videos?.some(video => video.anchor === anchor);
+  });
 }

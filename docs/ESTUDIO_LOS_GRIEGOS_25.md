@@ -1,0 +1,9 @@
+# Los griegos · Lectura, observación y práctica
+
+La portada invita a leer el primer tema. Desde el menú único se puede estudiar cualquier tema y pasar a la práctica o a una explicación personal. Las preguntas ofrecen retroalimentación y permiten avanzar con cualquier respuesta. El cuaderno conserva las explicaciones y la guía docente sigue mostrando la primera opción, los intentos, el uso de pistas y la relación de la última opción con la pregunta. La comparación con la vida del estudiante sigue los objetivos HI03 OA 01 y OA 04. [Unidad 2 del Mineduc](https://www.curriculumnacional.cl/docente/629/w3-article-21074.html)
+
+La cápsula «El nacimiento de la democracia», de Teleclases Chile, dura 7 minutos y 30 segundos. Se integra en «El legado griego: antes y hoy» y se puede abrir desde la pregunta sobre la asamblea. Los fragmentos señalados muestran la palabra democracia y sus raíces (2:45), una representación de la asamblea (5:05) y una urna actual (6:45). La propuesta de aula compara la deliberación y el voto en Atenas con una elección de lectura en el curso. [Cápsula educativa](https://www.youtube.com/watch?v=NKVtRYMWuEg) · [Programa municipal de Iquique](https://www.cormudesi.cl/Padems/PADEM%202022.pdf#page=81)
+
+Para preparar la guía se inspeccionaron los metadatos y fotogramas de todo el video en intervalos de cinco segundos. YouTube no devolvió el texto de los subtítulos. Las explicaciones se redactaron para la unidad y se contrastaron con el programa oficial. El reproductor se monta al pulsar «Cargar video» y siempre se ofrece un enlace a YouTube.
+
+Los enlaces «Ver el apoyo visual» e «Ir a las respuestas» desplazan la lectura y sitúan el foco. La lectura del apoyo visual usa las descripciones de las imágenes y el texto de las fuentes. La síntesis acepta una explicación escrita, oral o apoyada en un dibujo para presentar en clase. El motor de voz depende del dispositivo.

@@ -1,4 +1,4 @@
-import {tradeScene} from './trade-scene.js?v=trade21';
+import {tradeScene} from './trade-scene.js?v=greeks25';
 import {tradeWords} from './curriculum-trade.js?v=activities13';
 
 const evidence = {
@@ -48,7 +48,7 @@ function renderEvidence(task, answer, {icon, asset}, baseVisual) {
   const comparison = pair ? `<dl class="evidence-pair">${pair.map(([label, detail]) => `<div><dt>${label}</dt><dd>${detail}</dd></div>`).join('')}</dl>` : '';
   const picture = scene ? `<figure class="lesson-illustration"><img src="${asset(scene[0])}" alt="${scene[1]}" width="960" height="640"><figcaption>${scene[2] ?? 'Ilustración didáctica'}</figcaption></figure>` : '';
   const source = !scene && !pair ? baseVisual(task.visual, asset) : '';
-  return `<section class="lesson-evidence" aria-labelledby="evidence-title">
+  return `<section class="lesson-evidence" id="lesson-evidence" aria-labelledby="evidence-title">
     <header class="evidence-heading" id="lesson-evidence-copy"><h2 id="evidence-title">${title}</h2><p>${prompt}</p></header>
     ${picture}${source}${comparison}
   </section>`;
@@ -60,14 +60,14 @@ function renderResponse(task, answer, correct, icon, esc) {
   return `<div class="feedback course-feedback response-story" data-result="${correct ? 'correct' : 'reconsider'}">
     <span class="response-symbol" aria-hidden="true">${icon(correct ? discoverySymbols[task.id] : 'eye')}</span>
     <div class="response-copy">
-      <span class="response-state">${correct ? 'Hallazgo' : 'Otra mirada'}</span>
+      <span class="response-state">${correct ? 'Observa por qué' : 'Pista para revisar'}</span>
       <div id="answer-explanation"><strong>${esc(task.results[index])}</strong><p>${esc(task.responses[index])}</p></div>
       <button class="button response-listen" data-course-read="feedback">${icon('audio')}Escuchar explicación</button>
     </div>
   </div>`;
 }
 
-export function renderCourseActivity({unit, unitIndex, task, step, answer, icon, asset, esc, baseVisual}) {
+export function renderCourseActivity({unit, task, step, answer, icon, asset, esc, baseVisual}) {
   const correct = answer?.selected === task.correct;
   const lastStep = step === unit.tasks.length - 1;
   return `<section class="course-page course-activity" data-course-theme="${unit.id}" data-activity="${task.id}">
@@ -75,12 +75,14 @@ export function renderCourseActivity({unit, unitIndex, task, step, answer, icon,
       <div class="chapter-emblem" data-stage-emblem="${unit.id}" aria-hidden="true">${icon(unit.icon)}</div>
       <div class="activity-nav">
         <button class="button" data-course-back>${step ? '← Paso anterior' : '← Temas de la unidad'}</button><p class="eyebrow">${unit.title}</p>
-        <div class="lesson-progress" role="group" aria-label="Progreso de la etapa">
-          ${unit.tasks.map((_, index) => `<span aria-hidden="true" class="${index <= step ? 'filled' : ''} ${index === step ? 'current' : ''}"></span>`).join('')}
-          <small>Tema ${unitIndex + 1} de 5 · Paso ${step + 1} de ${unit.tasks.length}</small>
-        </div>
+        <small class="activity-position">Pregunta ${step + 1} de ${unit.tasks.length}</small>
       </div>
       <h1 id="lesson-question">${task.question}</h1>
+      <div class="course-shortcuts">
+        <a href="#lesson-evidence" data-course-jump>Ver el apoyo visual</a><a href="#lesson-answers" data-course-jump>Ir a las respuestas</a>
+        <button class="button" data-course-read="source">${icon('audio')}Escuchar el apoyo visual</button>
+        <button class="button" id="voice-stop" data-action="stop-voice" hidden>Detener lectura</button>
+      </div>
     </header>
     <div class="course-layout">
       ${renderEvidence(task, answer, {icon, asset}, baseVisual)}
@@ -90,9 +92,8 @@ export function renderCourseActivity({unit, unitIndex, task, step, answer, icon,
         <div class="activity-audio">
           <button class="button" data-action="speak">${icon('audio')}Escuchar pregunta</button>
           <button class="button" data-course-read="options">${icon('audio')}Escuchar opciones</button>
-          <button class="button" id="voice-stop" data-action="stop-voice" hidden>Detener lectura</button>
         </div>
-        <div class="choices" role="group" aria-labelledby="lesson-question">${task.options.map((option, index) => {
+        <div class="choices" id="lesson-answers" role="group" aria-labelledby="lesson-question">${task.options.map((option, index) => {
           const selected = answer?.selected === index;
           const result = selected ? correct ? 'correct' : 'reconsider' : 'idle';
           return `<div class="answer-row"><button class="choice ${selected ? 'selected' : ''}" data-motion-key="course:${task.id}:${index}:${answer?.attempts || 0}" data-answer-state="${result}" data-course-answer="${index}" aria-pressed="${selected}"><span class="answer-number" aria-hidden="true">${selected ? icon(correct ? 'check' : 'eye') : index + 1}</span><span>${esc(option)}</span></button>${selected ? renderResponse(task, answer, correct, icon, esc) : ''}</div>`;
@@ -101,8 +102,9 @@ export function renderCourseActivity({unit, unitIndex, task, step, answer, icon,
           <details class="help" data-course-hint="${task.id}"><summary>Ver una pista</summary><p>${task.hint}</p></details>
           ${task.id === 'trade' ? tradeWords() : ''}
           ${task.id === 'games' ? `<a class="button" href="${asset('apps/olympia/')}">${icon('olive')}Visitar Olimpia</a>` : ''}
+          ${task.id === 'rights' ? `<a class="button" data-study-anchor href="${asset('apps/learning-adventure/?unidad=1#democracia')}">${icon('play')} Ver el video sobre democracia</a>` : ''}
         </div>
-        <button class="primary" data-course-next ${correct ? '' : 'disabled'}>${lastStep ? 'Guardar hallazgo' : 'Seguir explorando'} →</button>
+        <button class="primary" data-course-next ${answer ? '' : 'disabled'}>${lastStep ? 'Explicar con mis palabras' : 'Siguiente pregunta'} →</button>
       </section>
     </div>
   </section>`;

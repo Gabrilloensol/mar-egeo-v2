@@ -1,5 +1,5 @@
-import {units,courseMap,courseLesson,courseRecord,courseTeacher,answerCourse,unitOpen,unitDone} from '../../premium/curriculum.js?v=greeks24';
-import {chapters as courseChapters, chapterIndex} from '../../premium/greeks-unit.js?v=greeks24';
+import {units,courseMap,courseLesson,courseRecord,courseTeacher,answerCourse} from '../../premium/curriculum.js?v=greeks25';
+import {chapters as courseChapters, chapterIndex} from '../../premium/greeks-unit.js?v=greeks25';
 import {createPresentation} from '../../premium/adventure-presentation.js';
 import {createMenuMotion} from '../../premium/menu-motion.js';
 import {createVoice} from '../../premium/adventure-voice.js';
@@ -12,6 +12,7 @@ const $=id=>document.getElementById(id),ROOT=new URL('../../',import.meta.url).h
 const asset=p=>ROOT+p;
 const query=new URLSearchParams(location.search);
 let menuChapter=chapterIndex(units,location.hash);
+let studyAnchor=menuChapter>=0?location.hash.slice(1):'';
 let readingChapter=null;
 const present=createPresentation(document);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -60,7 +61,10 @@ const voice=createVoice({synthesis:window.speechSynthesis,Utterance:window.Speec
  onError:()=>announce('No se pudo escuchar. La pregunta sigue disponible en pantalla.')});
 function speak(text){voice.speak(text);}
 function stopVoice(){voice.stop();readingChapter=null;}
-function navigate(view){stopVoice();message='';state.view=view;persist();render();}
+function navigate(view){
+ if(view==='map'&&state.view==='course'&&!studyAnchor)menuChapter=state.curriculum.unit;
+ stopVoice();message='';state.view=view;persist();render();
+}
 function resume(){const retry=chapterIds.find(id=>Object.hasOwn(state.replays,id));if(retry)return retry;const next=chapterIds.find(id=>!state.completed.includes(id)&&!state.legacy.includes(id));if(state.view==='play'&&isUnlocked(state,state.chapter)&&!state.completed.includes(state.chapter))return state.chapter;return next||'sea';}
 function start(id){if(!isUnlocked(state,id)){announce('Primero completa la aventura anterior.');return;}const same=state.chapter===id;state.chapter=id;state.step=Object.hasOwn(state.replays,id)?Math.min(state.replays[id],maxStep(state)):state.completed.includes(id)?4:same?Math.min(state.step,maxStep(state)):0;state.view='play';message='';persist();render();}
 function guide(text){return `<div class="guide"><img src="${portraits}" alt="Clío, guía imaginaria"><p>${text}</p></div>`;}
@@ -98,6 +102,10 @@ function renderScreen(){
   if(heading)heading.tabIndex=-1;
   (heading||$('main')).focus({preventScroll:true});
   window.scrollTo({top:0,behavior:'instant'});
+ }
+ if(studyAnchor&&state.view==='map'){
+  focusStudyAnchor(studyAnchor);
+  studyAnchor='';
  }
  if($('voice-stop'))$('voice-stop').hidden=!voice.active;
  renderedScreen=screen;
@@ -231,12 +239,49 @@ window.addEventListener('storage',e=>{if(e.key===preferenceKey(profile)){state.p
 
 // The new course is stored inside the existing backup, per player symbol.
 function courseRender(){message='';persist();render();}
+function startStudy(index,mode){
+ const unit=units[index];
+ if(!unit)return;
+ const c=state.curriculum;
+ c.unit=index;
+ const pending=unit.tasks.findIndex(task=>!Object.hasOwn(c.answers,task.id));
+ c.step=mode==='reflect'?unit.tasks.length:mode==='review'?0:pending<0?0:pending;
+ state.view='course';
+ courseRender();
+}
+function focusStudyAnchor(anchor){
+ const item=document.getElementById(anchor);
+ if(!item)return;
+ const topic=item.closest('.unit-topic');
+ if(topic)topic.open=true;
+ item.open=true;
+ item.querySelector('summary').focus({preventScroll:true});
+ item.scrollIntoView({block:'start'});
+}
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const c=state.curriculum;
  if(b.closest('#main')&&screenKey()!==renderedScreen)return;
+ if(b.dataset.studyTopic!==undefined){
+  const index=Number(b.dataset.studyTopic);
+  if(!units[index])return;
+  menuChapter=index;
+  studyAnchor=courseChapters[units[index].id].slug;
+  navigate('map');
+  return;
+ }
+ if(b.dataset.courseRead==='source'){
+  const panel=$('lesson-evidence');
+  const text=[...panel.querySelectorAll('h2,h3,p,dt,dd,figcaption,img[alt],.trade-port strong,.trade-port span')]
+   .map(node=>node.tagName==='IMG'?node.alt:node.textContent.trim()).filter(Boolean);
+  speak(text.join('. '));
+  return;
+ }
  if(b.dataset.courseRead){const target={options:'.course-task .choices',support:'#trade-support-text',words:'#trade-words',feedback:'#answer-explanation'}[b.dataset.courseRead];if(target){const node=document.querySelector(target);const text=b.dataset.courseRead==='options'?[...node.querySelectorAll('.choice')].map((el,i)=>'Opción '+(i+1)+'. '+el.querySelector('span:last-child').textContent).join('. '):[...node.querySelectorAll('h3,strong,span,dt,dd,p')].map(el=>el.textContent).join('. ');speak(text||'');}return;}
 
- if(b.dataset.courseContinue!==undefined){const i=Number(b.dataset.courseContinue);if(!units[i]||!unitOpen(c,i))return;c.unit=i;const step=units[i].tasks.findIndex(t=>c.answers[t.id]?.selected!==t.correct);c.step=step<0?units[i].tasks.length:step;state.view='course';courseRender();}
- if(b.dataset.courseUnit!==undefined){const i=Number(b.dataset.courseUnit);if(!Number.isInteger(i)||!units[i]||!unitOpen(c,i))return;c.unit=i;c.step=units[i].tasks.findIndex(t=>c.answers[t.id]?.selected!==t.correct);if(c.step<0)c.step=0;state.view='course';courseRender();}
+ if(b.dataset.courseContinue!==undefined||b.dataset.courseUnit!==undefined||b.dataset.courseReflect!==undefined){
+  const index=Number(b.dataset.courseContinue??b.dataset.courseUnit??b.dataset.courseReflect);
+  startStudy(index,b.hasAttribute('data-course-review')?'review':b.hasAttribute('data-course-reflect')?'reflect':'practice');
+  return;
+ }
  if(b.dataset.courseAnswer!==undefined&&state.view==='course'){
   const t=units[c.unit].tasks[c.step],selected=Number(b.dataset.courseAnswer);
   if(!t||!Object.hasOwn(t.options,selected))return;
@@ -244,24 +289,55 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
   if(hinted.has(t.id))state.curriculum.answers[t.id].help=true;
   courseRender();announce(`${t.results[selected]}. ${t.responses[selected]}`);
  }
- if(b.hasAttribute('data-course-next')){const t=units[c.unit].tasks[c.step];if(t&&c.answers[t.id]?.selected===t.correct){c.step++;courseRender();}}
+ if(b.hasAttribute('data-course-next')){const t=units[c.unit].tasks[c.step];if(t&&Object.hasOwn(c.answers,t.id)){c.step++;courseRender();}}
  if(b.hasAttribute('data-reflection-oral')){const r=c.reflections[c.unit]||{idea:'',evidence:'',oral:false};c.reflections[c.unit]={...r,oral:!r.oral};courseRender();}
- if(b.hasAttribute('data-course-back')){if(c.step>0)c.step--;else {menuChapter=c.unit;state.view='map';}courseRender();}
- if(b.hasAttribute('data-course-shared')&&units.every((_,i)=>unitDone(c,i))){c.shared=true;courseRender();}
+ if(b.hasAttribute('data-course-back')){
+  if(c.step>0){c.step--;courseRender();}
+  else {studyAnchor=courseChapters[units[c.unit].id].slug;menuChapter=c.unit;navigate('map');}
+ }
+ if(b.hasAttribute('data-course-shared')&&c.unit===units.length-1&&c.step===units[c.unit].tasks.length){c.shared=true;courseRender();}
 });
 document.addEventListener('toggle',e=>{
  const panel=e.target;
- if(!panel.matches?.('.unit-topic')||!panel.isConnected)return;
+ if(!panel.isConnected||!panel.matches?.('.unit-topic,.unit-video'))return;
+ if(!panel.open){
+  for(const player of panel.querySelectorAll('.unit-video-player')){
+   player.querySelector('iframe')?.remove();
+   player.querySelector('[data-unit-video]').hidden=false;
+  }
+ }
+ if(!panel.matches('.unit-topic'))return;
  if(panel.open)menuChapter=Number(panel.dataset.chapterIndex);
  else {
   if(panel===readingChapter)stopVoice();
-  panel.querySelector('.unit-video-player iframe')?.remove();
-  const trigger=panel.querySelector('[data-unit-video]');
-  if(trigger)trigger.hidden=false;
   if(menuChapter===Number(panel.dataset.chapterIndex))menuChapter=-1;
  }
 },true);
 document.addEventListener('click',e=>{
+ const material=e.target.closest('a[data-study-anchor]');
+ if(material&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey&&!e.altKey){
+  const index=chapterIndex(units,material.hash);
+  if(index>=0){
+   e.preventDefault();
+   menuChapter=index;
+   studyAnchor=material.hash.slice(1);
+   navigate('map');
+  }
+  return;
+ }
+ const jump=e.target.closest('[data-course-jump],.unit-cover a[href^="#"]');
+ if(jump){
+  const anchor=jump.hash.slice(1);
+  const target=document.getElementById(anchor);
+  if(!target)return;
+  e.preventDefault();
+  if(jump.hasAttribute('data-course-jump')){
+   const focus=target.querySelector('button,[href]')||target;
+   if(focus===target)focus.tabIndex=-1;
+   focus.focus({preventScroll:true});target.scrollIntoView({block:'start'});
+  }else focusStudyAnchor(anchor);
+  return;
+ }
  const button=e.target.closest('.unit-topic button');
  if(!button)return;
  const panel=button.closest('.unit-topic');
@@ -278,7 +354,12 @@ document.addEventListener('click',e=>{
  if(button.dataset.unitVideo){
   stopVoice();
   const unit=units[Number(panel.dataset.chapterIndex)];
-  const video=courseChapters[unit.id].video;
+  const video=courseChapters[unit.id].videos?.find(item=>item.id===button.dataset.unitVideo);
+  if(!video)return;
+  for(const player of panel.querySelectorAll('.unit-video-player:has(iframe)')){
+   player.querySelector('iframe').remove();
+   player.querySelector('[data-unit-video]').hidden=false;
+  }
   const frame=document.createElement('iframe');
   frame.title=video.title+' · Teleclases Chile';
   frame.src='https://www.youtube-nocookie.com/embed/'+video.id+'?cc_load_policy=1&cc_lang_pref=es&rel=0';
@@ -309,8 +390,6 @@ window.addEventListener('hashchange',()=>{
  const index=chapterIndex(units,location.hash);
  if(index<0)return;
  menuChapter=index;
- if(state.view==='map'){
-  const panel=$('main').querySelector(`[data-chapter-index="${index}"]`);
-  if(panel){panel.open=true;panel.scrollIntoView({block:'start'});}
- }else navigate('map');
+ if(state.view==='map')focusStudyAnchor(location.hash.slice(1));
+ else {studyAnchor=location.hash.slice(1);navigate('map');}
 });

@@ -29,7 +29,7 @@ export function tradeScene(answer, {asset, icon}) {
   const state = ['store','exchange','pots'][answer?.selected] || 'ready';
   const result = outcomes[state];
   const exchange = state === 'exchange';
-  return `<section class="trade-scene" data-trade-state="${state}" aria-labelledby="trade-scene-title">
+  return `<section class="trade-scene" id="lesson-evidence" data-trade-state="${state}" aria-labelledby="trade-scene-title">
     <div id="trade-support-text" class="trade-reading">
       <header class="trade-heading"><h2 id="trade-scene-title">${result.title}</h2><p>${result.summary}</p></header>
       <figure class="trade-chart">
